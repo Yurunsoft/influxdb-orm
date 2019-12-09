@@ -45,7 +45,14 @@ class PropertyMeta
      */
     private $timestamp;
 
-    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, bool $timestamp)
+    /**
+     * 是否为值
+     *
+     * @var bool
+     */
+    private $value;
+
+    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, bool $timestamp, bool $value)
     {
         $this->name = $name;
         $this->tagName = $tagName;
@@ -53,6 +60,7 @@ class PropertyMeta
         $this->fieldName = $fieldName;
         $this->fieldType = $fieldType;
         $this->timestamp = $timestamp;
+        $this->value = $value;
     }
 
     /**
@@ -133,6 +141,16 @@ class PropertyMeta
     public function isTimestamp()
     {
         return $this->timestamp;
+    }
+
+    /**
+     * Get 是否为值
+     *
+     * @return bool
+     */ 
+    public function isValue()
+    {
+        return $this->value;
     }
 
 }

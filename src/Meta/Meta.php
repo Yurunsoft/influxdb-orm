@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Yurun\InfluxDB\ORM\Annotation\Field;
 use Yurun\InfluxDB\ORM\Annotation\Tag;
 use Yurun\InfluxDB\ORM\Annotation\Timestamp;
+use Yurun\InfluxDB\ORM\Annotation\Value;
 
 class Meta
 {
@@ -60,6 +61,13 @@ class Meta
      */
     private $timestamp;
 
+    /**
+     * 值
+     *
+     * @var \Yurun\InfluxDB\ORM\Meta\PropertyMeta
+     */
+    private $value;
+
     public function __construct($className)
     {
         if(!self::$isRegisterLoader)
@@ -85,12 +93,12 @@ class Meta
             throw new \InvalidArgumentException(sprintf('@Measurement must set the name property in Class %s', $className));
         }
         $properties = $tags = $fields = [];
-        $timestamp = null;
+        $value = $timestamp = null;
         foreach($refClass->getProperties() as $property)
         {
             $name = $property->getName();
             $tagName = $tagType = $fieldName = $fieldType = null;
-            $isTimestamp = false;
+            $isTimestamp = $isValue = false;
             foreach(self::$reader->getPropertyAnnotations($property) as $annotation)
             {
                 switch(get_class($annotation))
@@ -108,9 +116,12 @@ class Meta
                     case Timestamp::class:
                         $isTimestamp = true;
                         break;
+                    case Value::class:
+                        $isValue = true;
+                        break;
                 }
             }
-            $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp);
+            $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp, $isValue);
             $properties[$name] = $propertyMeta;
             if($propertyMeta->isTag())
             {
@@ -124,6 +135,10 @@ class Meta
             {
                 $timestamp = $propertyMeta;
             }
+            if($propertyMeta->isValue())
+            {
+                $value = $propertyMeta;
+            }
         }
         $this->properties = $properties;
         $this->tags = $tags;
@@ -133,6 +148,7 @@ class Meta
             throw new \InvalidArgumentException(sprintf('Class %s must declared an @Timestamp property', $className));
         }
         $this->timestamp = $timestamp;
+        $this->value = $value;
     }
 
     /**
@@ -181,6 +197,16 @@ class Meta
     public function getTimestamp()
     {
         return $this->timestamp;
+    }
+
+    /**
+     * Get 值
+     *
+     * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta
+     */ 
+    public function getValue()
+    {
+        return $this->value;
     }
 
 }
