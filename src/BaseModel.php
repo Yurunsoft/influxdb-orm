@@ -2,6 +2,7 @@
 namespace Yurun\InfluxDB\ORM;
 
 use InfluxDB\Point;
+use Yurun\InfluxDB\ORM\Meta\Meta;
 use Yurun\InfluxDB\ORM\Meta\MetaManager;
 
 /**
@@ -14,7 +15,7 @@ abstract class BaseModel
      *
      * @return \Yurun\InfluxDB\ORM\Meta\Meta
      */
-    public static function __getMeta()
+    public static function __getMeta(): Meta
     {
         return MetaManager::get(static::class);
     }
@@ -25,7 +26,7 @@ abstract class BaseModel
      * @param array $dataList
      * @return \InfluxDB\Point[]
      */
-    public static function buildPoints($dataList)
+    public static function buildPoints($dataList): array
     {
         $points = [];
         $meta = static::__getMeta();
@@ -81,10 +82,12 @@ abstract class BaseModel
      * @param array $dataList
      * @return bool
      */
-    public static function write($dataList)
+    public static function write($dataList): bool
     {
         $points = static::buildPoints($dataList);
-        
+        $meta = static::__getMeta();
+        $database = InfluxDBManager::getDatabase($meta->getDatabase(), $meta->getClient());
+        return $database->writePoints($points, $meta->getPrecision(), $meta->getRetentionPolicy());
     }
 
     public function &__get($name)

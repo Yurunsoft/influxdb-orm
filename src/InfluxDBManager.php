@@ -1,6 +1,8 @@
 <?php
 namespace Yurun\InfluxDB\ORM;
 
+use InfluxDB\Client;
+
 abstract class InfluxDBManager
 {
     /**
@@ -11,11 +13,11 @@ abstract class InfluxDBManager
     private static $defaultClientName;
 
     /**
-     * 默认数据库名
+     * 客户端配置
      *
-     * @var string
+     * @var array
      */
-    private static $defaultDatabase;
+    private static $clientConfigs = [];
 
     /**
      * 客户端集合
@@ -30,6 +32,53 @@ abstract class InfluxDBManager
      * @var \InfluxDB\Database[]
      */
     private static $databases = [];
+
+    /**
+     * 设置客户端配置
+     *
+     * @param string $clientName
+     * @param string $host
+     * @param integer $port
+     * @param string $username
+     * @param string $password
+     * @param boolean $ssl
+     * @param boolean $verifySSL
+     * @param integer $timeout
+     * @param integer $connectTimeout
+     * @param string $defaultDatabase
+     * @return void
+     */
+    public static function setClientConfig($clientName, $host, $port = 8086, $username = '', $password = '', $ssl = false, $verifySSL = false, $timeout = 0, $connectTimeout = 0, $defaultDatabase = null)
+    {
+        static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase');
+    }
+
+    /**
+     * 获取客户端配置
+     *
+     * @param string|null $clientName
+     * @return array
+     */
+    public static function getClientConfig($clientName = null)
+    {
+        $clientName = static::getClientName($clientName);
+        return static::$clientConfigs[$clientName] ?? null;
+    }
+
+    /**
+     * 移除客户端配置
+     *
+     * @param string|null $clientName
+     * @return void
+     */
+    public static function removeClientConfig($clientName = null)
+    {
+        $clientName = static::getClientName($clientName);
+        if(isset(static::$clientConfigs[$clientName]))
+        {
+            unset(static::$clientConfigs[$clientName]);
+        }
+    }
 
     /**
      * 设置默认客户端名
@@ -53,27 +102,6 @@ abstract class InfluxDBManager
     }
 
     /**
-     * 设置默认数据库名
-     *
-     * @param string $databaseName
-     * @return void
-     */
-    public static function setDefaultDatabase(string $databaseName)
-    {
-        static::$defaultDatabase = $databaseName;
-    }
-
-    /**
-     * 获取默认数据库名
-     *
-     * @return string
-     */
-    public static function getDefaultDatabase(): string
-    {
-        return static::$defaultDatabase;
-    }
-
-    /**
      * 获取 InfluxDB 客户端
      *
      * @param string|null $clientName
@@ -81,7 +109,18 @@ abstract class InfluxDBManager
      */
     public static function getClient($clientName = null)
     {
-
+        $clientName = static::getClientName($clientName);
+        if(isset(static::$clients[$clientName]))
+        {
+            return static::$clients[$clientName];
+        }
+        if(!isset(static::$clientConfigs[$clientName]))
+        {
+            throw new \RuntimeException(sprintf('Client %s config does not found', $clientName));
+        }
+        $config = static::$clientConfigs[$clientName];
+        $client = new Client($config['host'], $config['port'], $config['username'], $config['password'], $config['ssl'], $config['verifySSL'], $config['timeout'], $config['connectTimeout']);
+        return static::$clients[$clientName] = $client;
     }
 
     /**
@@ -93,7 +132,37 @@ abstract class InfluxDBManager
      */
     public static function getDatabase($databaseName = null, $clientName = null)
     {
+        if(null === $databaseName)
+        {
+            $clientName = static::getClientName($clientName);
+            if(!isset(static::$clientConfigs[$clientName]))
+            {
+                throw new \RuntimeException(sprintf('Client %s config does not found', $clientName));
+            }
+            $databaseName = static::$clientConfigs[$clientName]['defaultDatabase'];
+        }
+        if(isset(static::$databases[$clientName][$databaseName]))
+        {
+            return static::$databases[$clientName][$databaseName];
+        }
+        $client = static::getClient($clientName);
+        static::$databases[$clientName][$databaseName] = $database = $client->selectDB($databaseName);
+        if(!$database->exists())
+        {
+            $database->create();
+        }
+        return $database;
+    }
 
+    /**
+     * 获取客户端名称
+     *
+     * @param string|null $clientName
+     * @return string
+     */
+    public static function getClientName($clientName = null)
+    {
+        return $clientName ?: static::$defaultClientName;
     }
 
 }

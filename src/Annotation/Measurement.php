@@ -14,4 +14,28 @@ class Measurement
      */
     public $name;
 
+    /**
+     * 客户端名
+     *
+     * @var string
+     */
+    public $client;
+
+    /**
+     * 数据库名
+     *
+     * @var string
+     */
+    public $database;
+
+    /**
+     * 指定写入所有点时要使用的显式保留策略。
+     * 如果未设置，将使用默认保留期。
+     * 这仅适用于Guzzle驱动程序。
+     * UDP驱动程序利用服务器的influxdb配置文件中定义的端点配置。
+     *
+     * @var string
+     */
+    public $retentionPolicy;
+
 }

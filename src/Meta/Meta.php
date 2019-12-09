@@ -34,6 +34,20 @@ class Meta
     private $measurement;
 
     /**
+     * 客户端明
+     *
+     * @var string
+     */
+    private $client;
+    
+    /**
+     * 数据库名
+     *
+     * @var string
+     */
+    private $database;
+
+    /**
      * 属性列表
      *
      * @var \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
@@ -62,11 +76,28 @@ class Meta
     private $timestamp;
 
     /**
+     * 时间戳记精度（默认为纳秒）。
+     *
+     * @var string
+     */
+    private $precision;
+
+    /**
      * 值
      *
      * @var \Yurun\InfluxDB\ORM\Meta\PropertyMeta
      */
     private $value;
+
+    /**
+     * 指定写入所有点时要使用的显式保留策略。
+     * 如果未设置，将使用默认保留期。
+     * 这仅适用于Guzzle驱动程序。
+     * UDP驱动程序利用服务器的influxdb配置文件中定义的端点配置。
+     *
+     * @var string
+     */
+    private $retentionPolicy;
 
     public function __construct($className)
     {
@@ -87,6 +118,9 @@ class Meta
         if($measurement || !$measurement->name)
         {
             $this->measurement = $measurement->name;
+            $this->client = $measurement->client;
+            $this->database = $measurement->database;
+            $this->retentionPolicy = $measurement->retentionPolicy;
         }
         else
         {
@@ -114,7 +148,9 @@ class Meta
                         $fieldType = $annotation->type;
                         break;
                     case Timestamp::class:
+                        /** @var Timestamp $annotation */
                         $isTimestamp = true;
+                        $this->precision = $annotation->precision;
                         break;
                     case Value::class:
                         $isValue = true;
@@ -207,6 +243,46 @@ class Meta
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Get 客户端明
+     *
+     * @return string
+     */ 
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Get 数据库名
+     *
+     * @return string
+     */ 
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Get uDP驱动程序利用服务器的influxdb配置文件中定义的端点配置。
+     *
+     * @return string
+     */ 
+    public function getRetentionPolicy()
+    {
+        return $this->retentionPolicy;
+    }
+
+    /**
+     * Get 时间戳记精度（默认为纳秒）。
+     *
+     * @return string
+     */ 
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 
 }

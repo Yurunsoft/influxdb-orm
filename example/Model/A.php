@@ -27,11 +27,18 @@ class A extends BaseModel
     private $name;
 
     /**
-     * @Timestamp
+     * @Timestamp(precision="s")
      *
      * @var int
      */
     private $time;
+
+    public function __construct($id, $name, $time)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->time = $time;
+    }
 
     /**
      * Get the value of time
