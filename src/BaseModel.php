@@ -16,19 +16,30 @@ abstract class BaseModel
         $meta = static::__getMeta();
         foreach($meta->getProperties() as $propertyName => $property)
         {
-            if(isset($data[$propertyName]))
+            if(!($name = $property->getFieldName() ?? $property->getTagName()))
+            {
+                if($property->isTimestamp())
+                {
+                    $name = 'time';
+                }
+                else if($property->isValue())
+                {
+                    $name = 'value';
+                }
+            }
+            if(isset($data[$name]))
             {
                 if($property->isTag())
                 {
-                    $this->$propertyName = static::parseValue($data[$propertyName], $property->getTagType());
+                    $this->$propertyName = static::parseValue($data[$name], $property->getTagType());
                 }
                 else if($property->isField())
                 {
-                    $this->$propertyName = static::parseValue($data[$propertyName], $property->getFieldType());
+                    $this->$propertyName = static::parseValue($data[$name], $property->getFieldType());
                 }
                 else
                 {
-                    $this->$propertyName = $data[$propertyName];
+                    $this->$propertyName = $data[$name];
                 }
             }
         }
@@ -63,11 +74,11 @@ abstract class BaseModel
             {
                 foreach($meta->getTags() as $propertyName => $property)
                 {
-                    $tags[$propertyName] = $item->$propertyName;
+                    $tags[$property->getTagName()] = $item->$propertyName;
                 }
                 foreach($meta->getFields() as $propertyName => $property)
                 {
-                    $fields[$propertyName] = static::parseValue($item->$propertyName, $property->getFieldType());
+                    $fields[$property->getFieldName()] = static::parseValue($item->$propertyName, $property->getFieldType());
                 }
                 if($valueProperty)
                 {
@@ -83,11 +94,11 @@ abstract class BaseModel
             {
                 foreach($meta->getTags() as $propertyName => $property)
                 {
-                    $tags[$propertyName] = $item[$propertyName];
+                    $tags[$property->getTagName()] = $item[$propertyName];
                 }
                 foreach($meta->getFields() as $propertyName => $property)
                 {
-                    $fields[$propertyName] = static::parseValue($item[$propertyName], $property->getFieldType());
+                    $fields[$property->getFieldName()] = static::parseValue($item[$propertyName], $property->getFieldType());
                 }
                 if($valueProperty)
                 {
