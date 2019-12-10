@@ -162,7 +162,7 @@ class QueryBuilder
             // 数组条件，无视后面的参数
             foreach($field as $k => $v)
             {
-                $where = $k . ' ' . $op . ' ' . $this->parseValue($k, $v);
+                $where = $k . ' = ' . $this->parseValue($k, $v);
                 $this->where[] = ($this->where ? ($condition . ' ') : '') . $where;
             }
         }
