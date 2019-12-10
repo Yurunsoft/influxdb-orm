@@ -55,6 +55,13 @@ class Meta
     private $properties;
 
     /**
+     * 字段名属性列表
+     *
+     * @var \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
+     */
+    private $propertiesByFieldName;
+
+    /**
      * 标签列表
      *
      * @var \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
@@ -135,7 +142,7 @@ class Meta
         {
             throw new \InvalidArgumentException(sprintf('@Measurement must set the name property in Class %s', $className));
         }
-        $properties = $tags = $fields = [];
+        $properties = $propertiesByFieldName = $tags = $fields = [];
         $value = $timestamp = null;
         foreach($refClass->getProperties() as $property)
         {
@@ -168,6 +175,7 @@ class Meta
             }
             $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp, $isValue);
             $properties[$name] = $propertyMeta;
+            $propertiesByFieldName[$propertyMeta->getFieldName() ?? $propertyMeta->getTagName()] = $propertyMeta;
             if($propertyMeta->isTag())
             {
                 $tags[$name] = $propertyMeta;
@@ -186,6 +194,7 @@ class Meta
             }
         }
         $this->properties = $properties;
+        $this->propertiesByFieldName = $propertiesByFieldName;
         $this->tags = $tags;
         $this->fields = $fields;
         if(null === $timestamp)
@@ -222,6 +231,16 @@ class Meta
     public function getProperty($name)
     {
         return $this->properties[$name] ?? null;
+    }
+
+    /**
+     * Get 属性
+     *
+     * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta|null
+     */ 
+    public function getByFieldName($fieldName)
+    {
+        return $this->propertiesByFieldName[$fieldName] ?? null;
     }
 
     /**

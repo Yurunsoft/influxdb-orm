@@ -248,7 +248,7 @@ class QueryBuilder
      */
     private function parseValue($field, $value)
     {
-        if($this->modelMeta && $property = $this->modelMeta->getProperty($field))
+        if($this->modelMeta && $property = $this->modelMeta->getByFieldName($field))
         {
             if($property->isTag())
             {
