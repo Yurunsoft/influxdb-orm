@@ -7,11 +7,15 @@ class ResultSet extends \InfluxDB\ResultSet
      * 获取模型
      *
      * @param string $modelClass
-     * @return \Yurun\InfluxDB\ORM\BaseModel
+     * @return \Yurun\InfluxDB\ORM\BaseModel|null
      */
     public function getModel($modelClass, $rowIndex = 0)
     {
-        $row = $this->getPoints()[$rowIndex] ?? [];
+        $row = $this->getPoints()[$rowIndex] ?? null;
+        if(!$row)
+        {
+            return null;
+        }
         return new $modelClass($row);
     }
 
