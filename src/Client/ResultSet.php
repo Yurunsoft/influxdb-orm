@@ -4,6 +4,18 @@ namespace Yurun\InfluxDB\ORM\Client;
 class ResultSet extends \InfluxDB\ResultSet
 {
     /**
+     * 获取行数据
+     *
+     * @param integer $rowIndex
+     * @return array|null
+     */
+    public function getRow($rowIndex = 0)
+    {
+        $points = $this->getPoints();
+        return $points[$rowIndex] ?? null;
+    }
+
+    /**
      * 获取模型
      *
      * @param string $modelClass
