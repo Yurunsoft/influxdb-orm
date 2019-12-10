@@ -4,6 +4,7 @@ namespace Yurun\InfluxDB\ORM\Example\Model;
 use Yurun\InfluxDB\ORM\BaseModel;
 use Yurun\InfluxDB\ORM\Annotation\Tag;
 use Yurun\InfluxDB\ORM\Annotation\Field;
+use Yurun\InfluxDB\ORM\Annotation\Value;
 use Yurun\InfluxDB\ORM\Annotation\Timestamp;
 use Yurun\InfluxDB\ORM\Annotation\Measurement;
 
@@ -33,9 +34,16 @@ class A extends BaseModel
      */
     private $time;
 
-    public static function create($id, $name, $time)
+    /**
+     * @Value
+     *
+     * @var int
+     */
+    private $value;
+
+    public static function create($id, $name, $time, $value)
     {
-        return new static(compact('id', 'name', 'time'));
+        return new static(compact('id', 'name', 'time', 'value'));
     }
 
     /**
@@ -106,6 +114,30 @@ class A extends BaseModel
     public function setName(string $name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of value
+     *
+     * @return int
+     */ 
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set the value of value
+     *
+     * @param int $value
+     *
+     * @return self
+     */ 
+    public function setValue(int $value)
+    {
+        $this->value = $value;
 
         return $this;
     }
