@@ -33,11 +33,9 @@ class A extends BaseModel
      */
     private $time;
 
-    public function __construct($id, $name, $time)
+    public static function create($id, $name, $time)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->time = $time;
+        return new static(compact('id', 'name', 'time'));
     }
 
     /**

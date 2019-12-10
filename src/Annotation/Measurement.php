@@ -38,4 +38,12 @@ class Measurement
      */
     public $retentionPolicy;
 
+    /**
+     * 时区，用于查询时自动转换为当前时区的时间
+     * 为空则使用 PHP 当前时区
+     *
+     * @var string
+     */
+    public $timezone;
+
 }

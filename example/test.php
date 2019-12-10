@@ -9,7 +9,7 @@ InfluxDBManager::setClientConfig('db_test', '127.0.0.1', 8086, '', '', false, fa
 InfluxDBManager::setDefaultClientName('db_test');
 
 $r = A::write([
-    new A(mt_rand(1, 999999), uniqid('', true), time()),
+    A::create(mt_rand(1, 999999), time(), time()),
     ['id'=>1, 'name'=>'aaa', 'time'=>time()],
 ]);
 

@@ -99,6 +99,14 @@ class Meta
      */
     private $retentionPolicy;
 
+    /**
+     * 时区，用于查询时自动转换为当前时区的时间
+     * 为空则使用 PHP 当前时区
+     *
+     * @var string
+     */
+    private $timezone;
+
     public function __construct($className)
     {
         if(!self::$isRegisterLoader)
@@ -121,6 +129,7 @@ class Meta
             $this->client = $measurement->client;
             $this->database = $measurement->database;
             $this->retentionPolicy = $measurement->retentionPolicy;
+            $this->timezone = $measurement->timezone ?? date_default_timezone_get();
         }
         else
         {
@@ -283,6 +292,16 @@ class Meta
     public function getPrecision()
     {
         return $this->precision;
+    }
+
+    /**
+     * Get 为空则使用 PHP 当前时区
+     *
+     * @return string
+     */ 
+    public function getTimezone()
+    {
+        return $this->timezone;
     }
 
 }

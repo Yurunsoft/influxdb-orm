@@ -10,6 +10,25 @@ use Yurun\InfluxDB\ORM\Meta\MetaManager;
  */
 abstract class BaseModel
 {
+    public function __construct($data = [])
+    {
+        $meta = static::__getMeta();
+        foreach($meta->getProperties() as $propertyName => $property)
+        {
+            if(isset($data[$propertyName]))
+            {
+                if($property->isTag())
+                {
+                    $this->$propertyName = static::parseValue($data[$propertyName], $property->getTagType());
+                }
+                else if($property->isField())
+                {
+                    $this->$propertyName = static::parseValue($data[$propertyName], $property->getFieldType());
+                }
+            }
+        }
+    }
+
     /**
      * 获取模型元数据
      *
@@ -26,7 +45,7 @@ abstract class BaseModel
      * @param array $dataList
      * @return \InfluxDB\Point[]
      */
-    public static function buildPoints($dataList): array
+    public static function buildPoints(array $dataList): array
     {
         $points = [];
         $meta = static::__getMeta();
@@ -43,7 +62,7 @@ abstract class BaseModel
                 }
                 foreach($meta->getFields() as $propertyName => $property)
                 {
-                    $fields[$propertyName] = $item->$propertyName;
+                    $fields[$propertyName] = static::parseValue($item->$propertyName, $property->getFieldType());
                 }
                 if($valueProperty)
                 {
@@ -63,7 +82,7 @@ abstract class BaseModel
                 }
                 foreach($meta->getFields() as $propertyName => $property)
                 {
-                    $fields[$propertyName] = $item[$propertyName];
+                    $fields[$propertyName] = static::parseValue($item[$propertyName], $property->getFieldType());
                 }
                 $timestamp = $item[$timestampProperty->getName()];
             }
@@ -82,12 +101,39 @@ abstract class BaseModel
      * @param array $dataList
      * @return bool
      */
-    public static function write($dataList): bool
+    public static function write(array $dataList): bool
     {
         $points = static::buildPoints($dataList);
         $meta = static::__getMeta();
         $database = InfluxDBManager::getDatabase($meta->getDatabase(), $meta->getClient());
         return $database->writePoints($points, $meta->getPrecision(), $meta->getRetentionPolicy());
+    }
+
+    /**
+     * 处理值
+     *
+     * @param mixed $value
+     * @param string $type
+     * @return mixed
+     */
+    public static function parseValue($value, $type)
+    {
+        switch($type)
+        {
+            case 'string':
+                return (string)$value;
+            case 'int':
+            case 'integer':
+                return (int)$value;
+            case 'float':
+            case 'double':
+                return (float)$value;
+            case 'bool':
+            case 'boolean':
+                return !!$value;
+            default:
+                return $value;
+        }
     }
 
     public function &__get($name)
@@ -107,7 +153,7 @@ abstract class BaseModel
     public function __set($name, $value)
     {
         $methodName = 'set' . ucfirst($name);
-        return $methodName($name, $value);
+        return $this->$methodName($value);
     }
 
     public function __isset($name)
