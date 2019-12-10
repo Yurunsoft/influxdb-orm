@@ -89,6 +89,14 @@ abstract class BaseModel
                 {
                     $fields[$propertyName] = static::parseValue($item[$propertyName], $property->getFieldType());
                 }
+                if($valueProperty)
+                {
+                    $value = $item[$valueProperty->getName()];
+                }
+                else
+                {
+                    $value = 0;
+                }
                 $timestamp = $item[$timestampProperty->getName()];
             }
             else
