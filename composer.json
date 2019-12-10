@@ -6,8 +6,8 @@
     "require": {
         "php": "^7.1",
         "influxdb/influxdb-php": "^1.15",
-        "yurunsoft/guzzle-swoole":"^1.1.0",
-        "doctrine/annotations": "^1.8.0"
+        "doctrine/annotations": "^1.8.0",
+        "yurunsoft/yurun-http": "^3.4.0"
     },
     "autoload": {
         "psr-4" : {

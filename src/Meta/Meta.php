@@ -215,6 +215,16 @@ class Meta
     }
 
     /**
+     * Get 属性
+     *
+     * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta|null
+     */ 
+    public function getProperty($name)
+    {
+        return $this->properties[$name] ?? null;
+    }
+
+    /**
      * Get 标签列表
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]

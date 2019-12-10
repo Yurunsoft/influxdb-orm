@@ -2,6 +2,7 @@
 namespace Yurun\InfluxDB\ORM;
 
 use InfluxDB\Client;
+use Yurun\InfluxDB\ORM\Client\YurunHttpDriver;
 
 abstract class InfluxDBManager
 {
@@ -22,7 +23,7 @@ abstract class InfluxDBManager
     /**
      * 客户端集合
      *
-     * @var \InfluxDB\Client[]
+     * @var \Yurun\InfluxDB\ORM\Client\Client[]
      */
     private static $clients;
 
@@ -105,7 +106,7 @@ abstract class InfluxDBManager
      * 获取 InfluxDB 客户端
      *
      * @param string|null $clientName
-     * @return \InfluxDB\Client
+     * @return \Yurun\InfluxDB\ORM\Client\Client
      */
     public static function getClient($clientName = null)
     {
@@ -120,6 +121,7 @@ abstract class InfluxDBManager
         }
         $config = static::$clientConfigs[$clientName];
         $client = new Client($config['host'], $config['port'], $config['username'], $config['password'], $config['ssl'], $config['verifySSL'], $config['timeout'], $config['connectTimeout']);
+        $client->setDriver(new YurunHttpDriver($client->getBaseURI()));
         return static::$clients[$clientName] = $client;
     }
 

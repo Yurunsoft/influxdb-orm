@@ -4,6 +4,7 @@ namespace Yurun\InfluxDB\ORM;
 use InfluxDB\Point;
 use Yurun\InfluxDB\ORM\Meta\Meta;
 use Yurun\InfluxDB\ORM\Meta\MetaManager;
+use Yurun\InfluxDB\ORM\Query\QueryBuilder;
 
 /**
  * InfluxDB Model 基类
@@ -24,6 +25,10 @@ abstract class BaseModel
                 else if($property->isField())
                 {
                     $this->$propertyName = static::parseValue($data[$propertyName], $property->getFieldType());
+                }
+                else
+                {
+                    $this->$propertyName = $data[$propertyName];
                 }
             }
         }
@@ -107,6 +112,44 @@ abstract class BaseModel
         $meta = static::__getMeta();
         $database = InfluxDBManager::getDatabase($meta->getDatabase(), $meta->getClient());
         return $database->writePoints($points, $meta->getPrecision(), $meta->getRetentionPolicy());
+    }
+
+    /**
+     * 获取模型查询器
+     *
+     * @return \Yurun\InfluxDB\ORM\Query\QueryBuilder
+     */
+    public static function query(): QueryBuilder
+    {
+        return QueryBuilder::createFromModel(static::class);
+    }
+
+    /**
+     * 查询并返回当前模型实例对象
+     * 回调仅有一个参数，类型为 \Yurun\InfluxDB\ORM\Query\QueryBuilder
+     * 
+     * @param callable $callback
+     * @return static
+     */
+    public static function find(callable $callback)
+    {
+        $query = static::query();
+        $callback($query);
+        return $query->select()->getModel(static::class);
+    }
+
+    /**
+     * 查询并返回当前模型实例对象数组
+     * 回调仅有一个参数，类型为 \Yurun\InfluxDB\ORM\Query\QueryBuilder
+     * 
+     * @param callable $callback
+     * @return static[]
+     */
+    public static function select($callback): array
+    {
+        $query = static::query();
+        $callback($query);
+        return $query->select()->getModelList(static::class);
     }
 
     /**

@@ -29,7 +29,7 @@ class A extends BaseModel
     /**
      * @Timestamp(precision="s")
      *
-     * @var int
+     * @var int|string
      */
     private $time;
 
@@ -41,7 +41,7 @@ class A extends BaseModel
     /**
      * Get the value of time
      *
-     * @return int
+     * @return int|string
      */ 
     public function getTime()
     {
@@ -51,11 +51,11 @@ class A extends BaseModel
     /**
      * Set the value of time
      *
-     * @param int $time
+     * @param int|string $time
      *
      * @return self
      */ 
-    public function setTime(int $time)
+    public function setTime($time)
     {
         $this->time = $time;
 
