@@ -1,4 +1,4 @@
-# imi-rpc
+# influxdb-orm
 
 [![Latest Version](https://img.shields.io/packagist/v/yurunsoft/influxdb-orm.svg)](https://packagist.org/packages/yurunsoft/influxdb-orm)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://secure.php.net/)
