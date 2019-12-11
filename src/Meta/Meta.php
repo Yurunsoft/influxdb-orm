@@ -5,6 +5,7 @@ use ReflectionClass;
 use Yurun\InfluxDB\ORM\Annotation\Measurement;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Swoole\Coroutine\Channel;
 use Yurun\InfluxDB\ORM\Annotation\Field;
 use Yurun\InfluxDB\ORM\Annotation\Tag;
 use Yurun\InfluxDB\ORM\Annotation\Timestamp;
@@ -114,6 +115,13 @@ class Meta
      */
     private $timezone;
 
+    /**
+     * 是否正在初始化
+     *
+     * @var \Swoole\Coroutine\Channel
+     */
+    private static $swooleChannel;
+
     public function __construct($className)
     {
         if(!self::$isRegisterLoader)
@@ -127,82 +135,98 @@ class Meta
         {
             self::$reader = new AnnotationReader();
         }
-        $refClass = new ReflectionClass($className);
-        /** @var Measurement $measurement */
-        $measurement = self::$reader->getClassAnnotation($refClass, Measurement::class);
-        if($measurement || !$measurement->name)
+        $inSwoole = defined('SWOOLE_VERSION');
+        if($inSwoole)
         {
-            $this->measurement = $measurement->name;
-            $this->client = $measurement->client;
-            $this->database = $measurement->database;
-            $this->retentionPolicy = $measurement->retentionPolicy;
-            $this->timezone = $measurement->timezone ?? date_default_timezone_get();
-        }
-        else
-        {
-            throw new \InvalidArgumentException(sprintf('@Measurement must set the name property in Class %s', $className));
-        }
-        $properties = $propertiesByFieldName = $tags = $fields = [];
-        $value = $timestamp = null;
-        foreach($refClass->getProperties() as $property)
-        {
-            $name = $property->getName();
-            $tagName = $tagType = $fieldName = $fieldType = null;
-            $isTimestamp = $isValue = false;
-            foreach(self::$reader->getPropertyAnnotations($property) as $annotation)
+            if(null === static::$swooleChannel)
             {
-                switch(get_class($annotation))
+                static::$swooleChannel = new Channel(1);
+            }
+            static::$swooleChannel->push(1);
+        }
+        try {
+            $refClass = new ReflectionClass($className);
+            /** @var Measurement $measurement */
+            $measurement = self::$reader->getClassAnnotation($refClass, Measurement::class);
+            if($measurement || !$measurement->name)
+            {
+                $this->measurement = $measurement->name;
+                $this->client = $measurement->client;
+                $this->database = $measurement->database;
+                $this->retentionPolicy = $measurement->retentionPolicy;
+                $this->timezone = $measurement->timezone ?? date_default_timezone_get();
+            }
+            else
+            {
+                throw new \InvalidArgumentException(sprintf('@Measurement must set the name property in Class %s', $className));
+            }
+            $properties = $propertiesByFieldName = $tags = $fields = [];
+            $value = $timestamp = null;
+            foreach($refClass->getProperties() as $property)
+            {
+                $name = $property->getName();
+                $tagName = $tagType = $fieldName = $fieldType = null;
+                $isTimestamp = $isValue = false;
+                foreach(self::$reader->getPropertyAnnotations($property) as $annotation)
                 {
-                    case Tag::class:
-                        /** @var Tag $annotation */
-                        $tagName = $annotation->name;
-                        $tagType = $annotation->type;
-                        break;
-                    case Field::class:
-                        /** @var Field $annotation */
-                        $fieldName = $annotation->name;
-                        $fieldType = $annotation->type;
-                        break;
-                    case Timestamp::class:
-                        /** @var Timestamp $annotation */
-                        $isTimestamp = true;
-                        $this->precision = $annotation->precision;
-                        break;
-                    case Value::class:
-                        $isValue = true;
-                        break;
+                    switch(get_class($annotation))
+                    {
+                        case Tag::class:
+                            /** @var Tag $annotation */
+                            $tagName = $annotation->name;
+                            $tagType = $annotation->type;
+                            break;
+                        case Field::class:
+                            /** @var Field $annotation */
+                            $fieldName = $annotation->name;
+                            $fieldType = $annotation->type;
+                            break;
+                        case Timestamp::class:
+                            /** @var Timestamp $annotation */
+                            $isTimestamp = true;
+                            $this->precision = $annotation->precision;
+                            break;
+                        case Value::class:
+                            $isValue = true;
+                            break;
+                    }
+                }
+                $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp, $isValue);
+                $properties[$name] = $propertyMeta;
+                $propertiesByFieldName[$propertyMeta->getFieldName() ?? $propertyMeta->getTagName()] = $propertyMeta;
+                if($propertyMeta->isTag())
+                {
+                    $tags[$name] = $propertyMeta;
+                }
+                if($propertyMeta->isField())
+                {
+                    $fields[$name] = $propertyMeta;
+                }
+                if($propertyMeta->isTimestamp())
+                {
+                    $timestamp = $propertyMeta;
+                }
+                if($propertyMeta->isValue())
+                {
+                    $value = $propertyMeta;
                 }
             }
-            $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp, $isValue);
-            $properties[$name] = $propertyMeta;
-            $propertiesByFieldName[$propertyMeta->getFieldName() ?? $propertyMeta->getTagName()] = $propertyMeta;
-            if($propertyMeta->isTag())
+            $this->properties = $properties;
+            $this->propertiesByFieldName = $propertiesByFieldName;
+            $this->tags = $tags;
+            $this->fields = $fields;
+            if(null === $timestamp)
             {
-                $tags[$name] = $propertyMeta;
+                throw new \InvalidArgumentException(sprintf('Class %s must declared an @Timestamp property', $className));
             }
-            if($propertyMeta->isField())
+            $this->timestamp = $timestamp;
+            $this->value = $value;
+        } finally {
+            if(static::$swooleChannel)
             {
-                $fields[$name] = $propertyMeta;
-            }
-            if($propertyMeta->isTimestamp())
-            {
-                $timestamp = $propertyMeta;
-            }
-            if($propertyMeta->isValue())
-            {
-                $value = $propertyMeta;
+                static::$swooleChannel->pop();
             }
         }
-        $this->properties = $properties;
-        $this->propertiesByFieldName = $propertiesByFieldName;
-        $this->tags = $tags;
-        $this->fields = $fields;
-        if(null === $timestamp)
-        {
-            throw new \InvalidArgumentException(sprintf('Class %s must declared an @Timestamp property', $className));
-        }
-        $this->timestamp = $timestamp;
-        $this->value = $value;
     }
 
     /**
