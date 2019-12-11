@@ -16,11 +16,6 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
     private $parameters;
 
     /**
-     * @var HttpRequest
-     */
-    private $httpRequest;
-
-    /**
      * 响应对象
      *
      * @var \Yurun\Util\YurunHttp\Http\Response
@@ -37,7 +32,6 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
     public function __construct($baseUri)
     {
         $this->baseUri = $baseUri . '/';
-        $this->httpRequest = new HttpRequest;
     }
 
     /**
@@ -116,7 +110,7 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
      */
     protected function getHttpRequest()
     {
-        $request = $this->httpRequest;
+        $request = new HttpRequest;
         if($auth = ($this->parameters['auth'] ?? null))
         {
             $request->userPwd(...$auth);
