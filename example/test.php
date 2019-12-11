@@ -54,3 +54,5 @@ var_dump(A::find(function(QueryBuilder $query){
 var_dump(A::select(function(QueryBuilder $query){
     $query->where('id', '=', 1)->limit(2);
 }));
+
+var_dump(A::query()->field('count(value)')->select()->getScalar());

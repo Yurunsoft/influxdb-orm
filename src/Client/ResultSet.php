@@ -16,6 +16,40 @@ class ResultSet extends \InfluxDB\ResultSet
     }
 
     /**
+     * 获取值
+     *
+     * @param integer $columnIndex
+     * @param integer $queryIndex
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getScalar($columnIndex = 1, $rowIndex = 0, $default = null)
+    {
+        $points = $this->getPoints();
+        $row = $points[$rowIndex] ?? null;
+        if(!$row)
+        {
+            return $row;
+        }
+        if(is_int($columnIndex))
+        {
+            $keys = array_keys($row);
+            if(isset($keys[$columnIndex]))
+            {
+                return $row[$keys[$columnIndex]];
+            }
+            else
+            {
+                return $default;
+            }
+        }
+        else
+        {
+            return $row[$columnIndex] ?? $default;
+        }
+    }
+
+    /**
      * 获取模型
      *
      * @param string $modelClass
