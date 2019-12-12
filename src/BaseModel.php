@@ -18,13 +18,9 @@ abstract class BaseModel
         {
             if(!($name = $property->getFieldName() ?? $property->getTagName()))
             {
-                if($property->isTimestamp())
+                if($property->isTimestamp() || $property->isValue())
                 {
-                    $name = 'time';
-                }
-                else if($property->isValue())
-                {
-                    $name = 'value';
+                    $name = $property->getName();
                 }
             }
             if(isset($data[$name]))
