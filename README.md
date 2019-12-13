@@ -241,6 +241,12 @@ $list = A::select(function(QueryBuilder $query){
 
 ```
 
+### 获取单个字段值
+
+```php
+$count = A::query()->field('count(value)')->select()->getScalar();
+```
+
 ## 免费技术支持
 
 QQ群：17916227 [![点击加群](https://pub.idqqimg.com/wpa/images/group.png "点击加群")](https://jq.qq.com/?_wv=1027&k=5wXf4Zq)，如有问题会有人解答和修复。
