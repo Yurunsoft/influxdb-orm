@@ -6,7 +6,11 @@
 
 ## 介绍
 
-一个用于 InfluxDB 时序数据库的 ORM
+一个用于 InfluxDB 时序数据库的 ORM，终结没有 InfluxDB ORM 的时代。
+
+常用操作一把梭，支持 php-fpm、Swoole 环境，一键轻松切换。
+
+可以用于所有传统框架、所有 Swoole 框架中！
 
 ## Composer
 
@@ -23,6 +27,14 @@
 然后执行 `composer update` 安装。
 
 ## 使用
+
+### Swoole 支持
+
+在 `WorkerStart` 事件中执行：
+
+```php
+\Yurun\Util\YurunHttp::setDefaultHandler(\Yurun\Util\YurunHttp\Handler\Swoole::class);
+```
 
 ### 定义模型
 
