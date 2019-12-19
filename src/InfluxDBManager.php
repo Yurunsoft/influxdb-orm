@@ -25,7 +25,7 @@ abstract class InfluxDBManager
      *
      * @var \Yurun\InfluxDB\ORM\Client\Client[]
      */
-    private static $clients;
+    private static $clients = [];
 
     /**
      * 数据库列表
@@ -95,9 +95,9 @@ abstract class InfluxDBManager
     /**
      * 获取默认客户端名
      *
-     * @return string
+     * @return string|null
      */
-    public static function getDefaultClientName(): string
+    public static function getDefaultClientName()
     {
         return static::$defaultClientName;
     }
