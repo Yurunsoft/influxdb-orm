@@ -21,8 +21,7 @@ env:
 install:
   - wget -O influxdb.deb https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
   - sudo dpkg -i influxdb.deb
-  - travis_retry sudo service influxdb restart
-  - sudo service influxdb status
+  - influxd &
 
 before_script:
   - composer update
