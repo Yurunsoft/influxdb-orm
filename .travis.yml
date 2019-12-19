@@ -1,6 +1,6 @@
-sudo: required
+root: required
 language: php
-dist: trusty
+dist: bionic
 
 php:
   - "7.1"
@@ -9,7 +9,7 @@ php:
   - "7.4"
 
 env:
-  matrix:
+  jobs:
   - INFLUXDB_VERSION=1.7.9
   global:
   - INFLUXDB_HOST=127.0.0.1
