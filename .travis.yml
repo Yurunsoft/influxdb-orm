@@ -19,9 +19,10 @@ env:
   - INFLUXDB_TEST_DB=db_influxdb_orm
 
 install:
-  - wget -O influxdb.deb https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
-  - sudo dpkg -i influxdb.deb
-  - influxd &
+  - wget https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
+  - sudo dpkg -i influxdb_${INFLUXDB_VERSION}_amd64.deb
+  - sudo service influxdb start
+  - sudo service influxdb status
 
 before_script:
   - composer update
