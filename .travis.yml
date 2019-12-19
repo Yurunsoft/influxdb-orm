@@ -1,0 +1,23 @@
+sudo: required
+language: php
+dist: trusty
+
+php:
+  - "7.1"
+  - "7.2"
+  - "7.3"
+  - "7.4"
+
+env:
+  - INFLUXDB_VER=1.7.9
+
+install:
+  - wget -O influxdb.deb https://dl.influxdata.com/influxdb/releases/influxdb_$INFLUXDB_VER_amd64.deb
+  - dpkg -i influxdb.deb
+  - service influxdb start
+
+before_script:
+  - composer update
+
+script:
+  - composer test
