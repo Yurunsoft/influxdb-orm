@@ -7,5 +7,12 @@ namespace Yurun\InfluxDB\ORM\Annotation;
  */
 class Value
 {
+    /**
+     * 数据类型
+     *
+     * @Enum({"string", "int", "integer", "float", "double", "bool", "boolean"})
+     * @var string
+     */
+    public $type = 'string';
 
 }

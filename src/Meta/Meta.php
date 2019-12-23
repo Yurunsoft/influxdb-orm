@@ -135,7 +135,7 @@ class Meta
         {
             self::$reader = new AnnotationReader();
         }
-        $inSwoole = defined('SWOOLE_VERSION');
+        $inSwoole = defined('SWOOLE_VERSION') && \Swoole\Coroutine::getuid() >= 0;
         if($inSwoole)
         {
             if(null === static::$swooleChannel)
@@ -165,7 +165,7 @@ class Meta
             foreach($refClass->getProperties() as $property)
             {
                 $name = $property->getName();
-                $tagName = $tagType = $fieldName = $fieldType = null;
+                $tagName = $tagType = $fieldName = $fieldType = $valueType = null;
                 $isTimestamp = $isValue = false;
                 foreach(self::$reader->getPropertyAnnotations($property) as $annotation)
                 {
@@ -187,11 +187,13 @@ class Meta
                             $this->precision = $annotation->precision;
                             break;
                         case Value::class:
+                            /** @var Value $annotation */
                             $isValue = true;
+                            $valueType = $annotation->type;
                             break;
                     }
                 }
-                $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $isTimestamp, $isValue);
+                $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, $isTimestamp, $isValue);
                 $properties[$name] = $propertyMeta;
                 $propertiesByFieldName[$propertyMeta->getFieldName() ?? $propertyMeta->getTagName()] = $propertyMeta;
                 if($propertyMeta->isTag())

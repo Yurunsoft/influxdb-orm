@@ -110,6 +110,7 @@ abstract class BaseModel
             {
                 throw new \InvalidArgumentException(sprintf('Write datalist[%s] invalid', $i));
             }
+            $value = static::parseValue($value, $valueProperty ? $valueProperty->getValueType() : 'string');
             $points[] = new Point($meta->getMeasurement(), $value, $tags, $fields, $timestamp);
         }
         return $points;

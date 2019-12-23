@@ -39,6 +39,13 @@ class PropertyMeta
     private $fieldType;
 
     /**
+     * 值类型
+     *
+     * @var string|null
+     */
+    private $valueType;
+
+    /**
      * 是否为时间戳
      *
      * @var bool
@@ -52,13 +59,14 @@ class PropertyMeta
      */
     private $value;
 
-    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, bool $timestamp, bool $value)
+    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, bool $timestamp, bool $value)
     {
         $this->name = $name;
         $this->tagName = $tagName;
         $this->tagType = $tagType;
         $this->fieldName = $fieldName;
         $this->fieldType = $fieldType;
+        $this->valueType = $valueType;
         $this->timestamp = $timestamp;
         $this->value = $value;
     }
@@ -151,6 +159,16 @@ class PropertyMeta
     public function isValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Get 值类型
+     *
+     * @return string|null
+     */ 
+    public function getValueType()
+    {
+        return $this->valueType;
     }
 
 }
