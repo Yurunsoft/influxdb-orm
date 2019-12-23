@@ -9,34 +9,48 @@ use Yurun\InfluxDB\ORM\Query\QueryBuilder;
 /**
  * InfluxDB Model 基类
  */
-abstract class BaseModel
+abstract class BaseModel implements \JsonSerializable
 {
+    /**
+     * Meta
+     *
+     * @var \Yurun\InfluxDB\ORM\Meta\Meta
+     */
+    private $__meta;
+
+    /**
+     * __construct
+     * 
+     * @param array $data 键需要是数据库存储的字段名
+     */
     public function __construct($data = [])
     {
-        $meta = static::__getMeta();
-        foreach($meta->getProperties() as $propertyName => $property)
+        $this->__meta = static::__getMeta();
+        foreach($this->__meta->getProperties() as $propertyName => $property)
         {
-            if(!($name = $property->getFieldName() ?? $property->getTagName()))
+            if($property->isField())
             {
-                if($property->isTimestamp() || $property->isValue())
-                {
-                    $name = $property->getName();
-                }
+                $name = $property->getFieldName();
+            }
+            else if($property->isTag())
+            {
+                $name = $property->getTagName();
+            }
+            else if($property->isTimestamp())
+            {
+                $name = 'time';
+            }
+            else if($property->isValue())
+            {
+                $name = 'value';
+            }
+            else
+            {
+                continue;
             }
             if(isset($data[$name]))
             {
-                if($property->isTag())
-                {
-                    $this->$propertyName = static::parseValue($data[$name], $property->getTagType());
-                }
-                else if($property->isField())
-                {
-                    $this->$propertyName = static::parseValue($data[$name], $property->getFieldType());
-                }
-                else
-                {
-                    $this->$propertyName = $data[$name];
-                }
+                $this->$propertyName = $data[$name];
             }
         }
     }
@@ -224,4 +238,22 @@ abstract class BaseModel
     {
     }
 
+    /**
+     * 将当前对象作为数组返回
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $result = [];
+        foreach($this->__meta->getProperties() as $propertyName => $property)
+        {
+            $result[$propertyName] = $this->__get($propertyName);
+        }
+        return $result;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
 }
