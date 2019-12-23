@@ -5,6 +5,7 @@ use InfluxDB\Point;
 use Yurun\InfluxDB\ORM\Meta\Meta;
 use Yurun\InfluxDB\ORM\Meta\MetaManager;
 use Yurun\InfluxDB\ORM\Query\QueryBuilder;
+use Yurun\InfluxDB\ORM\Util\DateTime;
 
 /**
  * InfluxDB Model 基类
@@ -239,6 +240,30 @@ abstract class BaseModel implements \JsonSerializable
     }
 
     /**
+     * 获取格式化后的时间
+     *
+     * @param string|null $format
+     * @return string
+     */
+    public function getFormatedTime($format = null)
+    {
+        $property = $this->__meta->getTimestamp();
+        if(null === $format)
+        {
+            $format = $property->getTimeFormat();
+        }
+        $time = $this->__get($property->getName());
+        if($format)
+        {
+            return DateTime::format($format, $time);
+        }
+        else
+        {
+            return $time;
+        }
+    }
+
+    /**
      * 将当前对象作为数组返回
      * @return array
      */
@@ -249,6 +274,7 @@ abstract class BaseModel implements \JsonSerializable
         {
             $result[$propertyName] = $this->__get($propertyName);
         }
+        $result[$this->__meta->getTimestamp()->getName()] = $this->getFormatedTime();
         return $result;
     }
 

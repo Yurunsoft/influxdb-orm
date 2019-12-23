@@ -59,7 +59,14 @@ class PropertyMeta
      */
     private $value;
 
-    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, bool $timestamp, bool $value)
+    /**
+     * 时间格式
+     *
+     * @var string|null
+     */
+    private $timeFormat;
+
+    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, $timeFormat, bool $timestamp, bool $value)
     {
         $this->name = $name;
         $this->tagName = $tagName;
@@ -67,6 +74,7 @@ class PropertyMeta
         $this->fieldName = $fieldName;
         $this->fieldType = $fieldType;
         $this->valueType = $valueType;
+        $this->timeFormat = $timeFormat;
         $this->timestamp = $timestamp;
         $this->value = $value;
     }
@@ -169,6 +177,16 @@ class PropertyMeta
     public function getValueType()
     {
         return $this->valueType;
+    }
+
+    /**
+     * Get 时间格式
+     *
+     * @return string|null
+     */ 
+    public function getTimeFormat()
+    {
+        return $this->timeFormat;
     }
 
 }

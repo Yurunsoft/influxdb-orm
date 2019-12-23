@@ -15,4 +15,13 @@ class Timestamp
      */
     public $precision = 'n';
 
+    /**
+     * 显示用的日期格式设置
+     *
+     * 支持 date() 函数的以外，还支持 {ms}、{us}、{ns}
+     * 
+     * @var string
+     */
+    public $format;
+
 }

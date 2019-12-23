@@ -165,7 +165,7 @@ class Meta
             foreach($refClass->getProperties() as $property)
             {
                 $name = $property->getName();
-                $tagName = $tagType = $fieldName = $fieldType = $valueType = null;
+                $tagName = $tagType = $fieldName = $fieldType = $valueType = $timeFormat = null;
                 $isTimestamp = $isValue = false;
                 foreach(self::$reader->getPropertyAnnotations($property) as $annotation)
                 {
@@ -185,6 +185,7 @@ class Meta
                             /** @var Timestamp $annotation */
                             $isTimestamp = true;
                             $this->precision = $annotation->precision;
+                            $timeFormat = $annotation->format;
                             break;
                         case Value::class:
                             /** @var Value $annotation */
@@ -193,7 +194,7 @@ class Meta
                             break;
                     }
                 }
-                $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, $isTimestamp, $isValue);
+                $propertyMeta = new PropertyMeta($name, $tagName, $tagType, $fieldName, $fieldType, $valueType, $timeFormat, $isTimestamp, $isValue);
                 $properties[$name] = $propertyMeta;
                 $propertiesByFieldName[$propertyMeta->getFieldName() ?? $propertyMeta->getTagName()] = $propertyMeta;
                 if($propertyMeta->isTag())
