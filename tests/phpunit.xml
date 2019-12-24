@@ -10,8 +10,10 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="InfluxDBORM">
-            <directory>test/Tests</directory>
-            <file>ConnectionTest.php</file>
+            <file>test/Tests/DateTimeTest.php</file>
+            <file>test/Tests/ConnectionTest.php</file>
+            <file>test/Tests/QueryBuilderTest.php</file>
+            <file>test/Tests/ModelTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,5 +1,5 @@
 <?php
-namespace Yurun\InfluxDB\ORM\Test;
+namespace Yurun\InfluxDB\ORM\Test\Model;
 
 use Yurun\InfluxDB\ORM\BaseModel;
 use Yurun\InfluxDB\ORM\Annotation\Tag;
@@ -10,6 +10,10 @@ use Yurun\InfluxDB\ORM\Annotation\Measurement;
 
 /**
  * @Measurement(name="a")
+ * @property int $id
+ * @property string $name
+ * @property int $time
+ * @property int $score
  */
 class ModelA extends BaseModel
 {
@@ -28,7 +32,7 @@ class ModelA extends BaseModel
     private $name;
 
     /**
-     * @Timestamp(precision="s")
+     * @Timestamp(precision="s", format="Y-m-d H:i:s")
      *
      * @var int|string
      */
@@ -37,7 +41,7 @@ class ModelA extends BaseModel
     /**
      * @Value
      *
-     * @var int
+     * @var float
      */
     private $score;
 
@@ -121,7 +125,7 @@ class ModelA extends BaseModel
     /**
      * Get the value of score
      *
-     * @return int
+     * @return float
      */ 
     public function getScore()
     {
@@ -131,11 +135,11 @@ class ModelA extends BaseModel
     /**
      * Set the value of score
      *
-     * @param int $score
+     * @param float $score
      *
      * @return self
      */ 
-    public function setScore(int $score)
+    public function setScore(float $score)
     {
         $this->score = $score;
 
