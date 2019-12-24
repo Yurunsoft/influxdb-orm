@@ -240,6 +240,18 @@ class QueryBuilder
     }
 
     /**
+     * 时区
+     *
+     * @param string|null $timezone
+     * @return static
+     */
+    public function timezone($timezone)
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    /**
      * 处理加入条件的值
      *
      * @param string $field
