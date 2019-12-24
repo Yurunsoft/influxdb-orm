@@ -69,6 +69,13 @@ class QueryBuilder
     private $timezone;
 
     /**
+     * 构造方法赋值的时区
+     *
+     * @var string
+     */
+    private $originTimezone;
+
+    /**
      * 最后执行的SQL语句
      *
      * @var string
@@ -92,7 +99,7 @@ class QueryBuilder
     public function __construct($clientName = null, $databaseName = null, $timezone = null)
     {
         $this->database = InfluxDBManager::getDatabase($databaseName, $clientName);
-        $this->timezone = $timezone;
+        $this->originTimezone = $this->timezone = $timezone;
     }
 
     /**
@@ -374,6 +381,7 @@ SQL;
         $this->fields = [];
         $this->orderBy = [];
         $this->groupBy = [];
+        $this->timezone = $this->originTimezone;
         return $sql;
     }
 
