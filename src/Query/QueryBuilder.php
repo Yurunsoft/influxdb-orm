@@ -159,11 +159,20 @@ class QueryBuilder
     {
         if(is_array($field))
         {
+            $first = true;
             // 数组条件，无视后面的参数
             foreach($field as $k => $v)
             {
                 $where = $k . ' = ' . $this->parseValue($k, $v);
-                $this->where[] = ($this->where ? ($condition . ' ') : '') . $where;
+                if($first)
+                {
+                    $this->where[] = ($this->where ? ($condition . ' ') : '') . $where;
+                    $first = false;
+                }
+                else
+                {
+                    $this->where[] = 'AND ' . $where;
+                }
             }
         }
         else if(null === $op && null === $value && is_string($field))
