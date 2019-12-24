@@ -9,7 +9,15 @@ abstract class DateTime
 
     private const SMALLER = 3;
 
-    public static function format($format, $time)
+    /**
+     * 格式化日期
+     * 支持 date() 函数的以外，还支持 {ms}、{us}、{ns}
+     *
+     * @param string $format
+     * @param string $time
+     * @return string
+     */
+    public static function format(string $format, string $time): string
     {
         if(preg_match('/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})\.?(\d+)?Z/', $time, $matches) <= 0)
         {

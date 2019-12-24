@@ -2,14 +2,15 @@
 namespace Yurun\InfluxDB\ORM\Meta;
 
 use ReflectionClass;
+use Swoole\Coroutine\Channel;
+use Yurun\InfluxDB\ORM\Annotation\Tag;
+use Yurun\InfluxDB\ORM\Annotation\Field;
+use Yurun\InfluxDB\ORM\Annotation\Value;
+use Yurun\InfluxDB\ORM\Meta\PropertyMeta;
+use Yurun\InfluxDB\ORM\Annotation\Timestamp;
 use Yurun\InfluxDB\ORM\Annotation\Measurement;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Swoole\Coroutine\Channel;
-use Yurun\InfluxDB\ORM\Annotation\Field;
-use Yurun\InfluxDB\ORM\Annotation\Tag;
-use Yurun\InfluxDB\ORM\Annotation\Timestamp;
-use Yurun\InfluxDB\ORM\Annotation\Value;
 
 class Meta
 {
@@ -35,7 +36,7 @@ class Meta
     private $measurement;
 
     /**
-     * 客户端明
+     * 客户端名
      *
      * @var string
      */
@@ -122,7 +123,7 @@ class Meta
      */
     private static $swooleChannel;
 
-    public function __construct($className)
+    public function __construct(string $className)
     {
         if(!self::$isRegisterLoader)
         {
@@ -235,7 +236,7 @@ class Meta
     /**
      * Get the value of measurement
      */ 
-    public function getMeasurement()
+    public function getMeasurement(): string
     {
         return $this->measurement;
     }
@@ -245,7 +246,7 @@ class Meta
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
      */ 
-    public function getProperties()
+    public function getProperties(): array
     {
         return $this->properties;
     }
@@ -253,9 +254,10 @@ class Meta
     /**
      * Get 属性
      *
+     * @param string $name
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta|null
      */ 
-    public function getProperty($name)
+    public function getProperty(string $name): ?PropertyMeta
     {
         return $this->properties[$name] ?? null;
     }
@@ -263,9 +265,10 @@ class Meta
     /**
      * Get 属性
      *
+     * @param string $fieldName
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta|null
      */ 
-    public function getByFieldName($fieldName)
+    public function getByFieldName(string $fieldName): ?PropertyMeta
     {
         return $this->propertiesByFieldName[$fieldName] ?? null;
     }
@@ -275,7 +278,7 @@ class Meta
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
      */ 
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -285,7 +288,7 @@ class Meta
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta[]
      */ 
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
@@ -295,7 +298,7 @@ class Meta
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta
      */ 
-    public function getTimestamp()
+    public function getTimestamp(): PropertyMeta
     {
         return $this->timestamp;
     }
@@ -305,17 +308,17 @@ class Meta
      *
      * @return \Yurun\InfluxDB\ORM\Meta\PropertyMeta
      */ 
-    public function getValue()
+    public function getValue(): ?PropertyMeta
     {
         return $this->value;
     }
 
     /**
-     * Get 客户端明
+     * Get 客户端命
      *
      * @return string
      */ 
-    public function getClient()
+    public function getClient(): ?string
     {
         return $this->client;
     }
@@ -325,7 +328,7 @@ class Meta
      *
      * @return string
      */ 
-    public function getDatabase()
+    public function getDatabase(): ?string
     {
         return $this->database;
     }
@@ -335,7 +338,7 @@ class Meta
      *
      * @return string
      */ 
-    public function getRetentionPolicy()
+    public function getRetentionPolicy(): ?string
     {
         return $this->retentionPolicy;
     }
@@ -345,7 +348,7 @@ class Meta
      *
      * @return string
      */ 
-    public function getPrecision()
+    public function getPrecision(): string
     {
         return $this->precision;
     }
@@ -355,7 +358,7 @@ class Meta
      *
      * @return string
      */ 
-    public function getTimezone()
+    public function getTimezone(): ?string
     {
         return $this->timezone;
     }

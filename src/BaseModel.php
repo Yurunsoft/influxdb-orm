@@ -24,7 +24,7 @@ abstract class BaseModel implements \JsonSerializable
      * 
      * @param array $data 键需要是数据库存储的字段名
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $this->__meta = static::__getMeta();
         foreach($this->__meta->getProperties() as $propertyName => $property)
@@ -162,7 +162,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param callable $callback
      * @return static
      */
-    public static function find(callable $callback)
+    public static function find(callable $callback): self
     {
         $query = static::query();
         $callback($query);
@@ -176,7 +176,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param callable $callback
      * @return static[]
      */
-    public static function select($callback): array
+    public static function select(callable $callback): array
     {
         $query = static::query();
         $callback($query);
@@ -190,7 +190,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param string $type
      * @return mixed
      */
-    public static function parseValue($value, $type)
+    public static function parseValue($value, string $type)
     {
         switch($type)
         {
@@ -245,7 +245,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param string|null $format
      * @return string
      */
-    public function getFormatedTime($format = null)
+    public function getFormatedTime(?string $format = null): string
     {
         $property = $this->__meta->getTimestamp();
         if(null === $format)
