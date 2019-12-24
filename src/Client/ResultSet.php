@@ -29,7 +29,7 @@ class ResultSet extends \InfluxDB\ResultSet
         $row = $points[$rowIndex] ?? null;
         if(!$row)
         {
-            return $row;
+            return $default;
         }
         if(is_int($columnIndex))
         {
