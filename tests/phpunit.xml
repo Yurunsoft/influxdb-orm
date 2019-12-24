@@ -13,6 +13,7 @@
             <file>test/Tests/DateTimeTest.php</file>
             <file>test/Tests/ConnectionTest.php</file>
             <file>test/Tests/QueryBuilderTest.php</file>
+            <file>test/Tests/ResultSetTest.php</file>
             <file>test/Tests/ModelTest.php</file>
         </testsuite>
     </testsuites>

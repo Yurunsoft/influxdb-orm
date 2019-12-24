@@ -18,7 +18,7 @@ class ConnectionTest extends TestCase
         $verifySSL = false;
         $timeout = 0;
         $connectTimeout = 0;
-        $defaultDatabase = getenv('INFLUXDB_TEST_DB') ?: 'db_influxdb_orm';
+        $defaultDatabase = getenv('INFLUXDB_TEST_ORM_DB') ?: 'db_influxdb_orm_ormtest';
 
         InfluxDBManager::setClientConfig('test', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase);
         InfluxDBManager::setClientConfig('test2', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase);
@@ -50,7 +50,7 @@ class ConnectionTest extends TestCase
     public function testGetDatabase()
     {
         $database = InfluxDBManager::getDatabase();
-        $this->assertEquals(getenv('INFLUXDB_TEST_DB') ?: 'db_influxdb_orm', $database->getName());
+        $this->assertEquals(getenv('INFLUXDB_TEST_ORM_DB') ?: 'db_influxdb_orm_ormtest', $database->getName());
         $this->assertTrue($database->exists());
 
         $database = InfluxDBManager::getDatabase('db2');

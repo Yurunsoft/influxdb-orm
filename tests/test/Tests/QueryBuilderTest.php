@@ -39,7 +39,6 @@ SQL
                         'c'   =>  3,
                         'd'   =>  4,
                     ])
-                    ->timezone(null)
                     ->limit(10)
                     ->buildSql();
         $this->assertEquals(<<<SQL

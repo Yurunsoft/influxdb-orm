@@ -16,7 +16,8 @@ env:
   - INFLUXDB_PORT=8086
   - INFLUXDB_USERNAME=
   - INFLUXDB_PASSWORD=
-  - INFLUXDB_TEST_DB=db_influxdb_orm
+  - INFLUXDB_TEST_DB=db_influxdb_orm_dbtest
+  - INFLUXDB_TEST_ORM_DB=db_influxdb_orm_ormtest
 
 install:
   - wget https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
