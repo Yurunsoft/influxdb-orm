@@ -19,7 +19,7 @@
 ```json
 {
     "require": {
-        "yurunsoft/influxdb-orm": "^1.0.0"
+        "yurunsoft/influxdb-orm": "^1.1.0"
     }
 }
 ```
