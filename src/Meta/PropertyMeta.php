@@ -39,6 +39,13 @@ class PropertyMeta
     private $fieldType;
 
     /**
+     * 值类型
+     *
+     * @var string|null
+     */
+    private $valueType;
+
+    /**
      * 是否为时间戳
      *
      * @var bool
@@ -52,13 +59,22 @@ class PropertyMeta
      */
     private $value;
 
-    public function __construct($name, $tagName, $tagType, $fieldName, $fieldType, bool $timestamp, bool $value)
+    /**
+     * 时间格式
+     *
+     * @var string|null
+     */
+    private $timeFormat;
+
+    public function __construct(string $name, ?string $tagName, ?string $tagType, ?string $fieldName, ?string $fieldType, ?string $valueType, ?string $timeFormat, bool $timestamp, bool $value)
     {
         $this->name = $name;
         $this->tagName = $tagName;
         $this->tagType = $tagType;
         $this->fieldName = $fieldName;
         $this->fieldType = $fieldType;
+        $this->valueType = $valueType;
+        $this->timeFormat = $timeFormat;
         $this->timestamp = $timestamp;
         $this->value = $value;
     }
@@ -68,7 +84,7 @@ class PropertyMeta
      *
      * @return string
      */ 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -78,7 +94,7 @@ class PropertyMeta
      *
      * @return string|null
      */ 
-    public function getTagName()
+    public function getTagName(): ?string
     {
         return $this->tagName;
     }
@@ -88,7 +104,7 @@ class PropertyMeta
      *
      * @return string|null
      */ 
-    public function getTagType()
+    public function getTagType(): ?string
     {
         return $this->tagType;
     }
@@ -98,7 +114,7 @@ class PropertyMeta
      *
      * @return boolean
      */
-    public function isTag()
+    public function isTag(): bool
     {
         return null !== $this->tagName;
     }
@@ -108,7 +124,7 @@ class PropertyMeta
      *
      * @return string|null
      */ 
-    public function getFieldName()
+    public function getFieldName(): ?string
     {
         return $this->fieldName;
     }
@@ -118,7 +134,7 @@ class PropertyMeta
      *
      * @return string|null
      */ 
-    public function getFieldType()
+    public function getFieldType(): ?string
     {
         return $this->fieldType;
     }
@@ -128,7 +144,7 @@ class PropertyMeta
      *
      * @return boolean
      */
-    public function isField()
+    public function isField(): bool
     {
         return null !== $this->fieldName;
     }
@@ -138,7 +154,7 @@ class PropertyMeta
      *
      * @return bool
      */ 
-    public function isTimestamp()
+    public function isTimestamp(): bool
     {
         return $this->timestamp;
     }
@@ -148,9 +164,29 @@ class PropertyMeta
      *
      * @return bool
      */ 
-    public function isValue()
+    public function isValue(): bool
     {
         return $this->value;
+    }
+
+    /**
+     * Get 值类型
+     *
+     * @return string|null
+     */ 
+    public function getValueType(): ?string
+    {
+        return $this->valueType;
+    }
+
+    /**
+     * Get 时间格式
+     *
+     * @return string|null
+     */ 
+    public function getTimeFormat(): ?string
+    {
+        return $this->timeFormat;
     }
 
 }

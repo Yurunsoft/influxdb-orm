@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="./bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="InfluxDBORM">
+            <file>test/Tests/DateTimeTest.php</file>
+            <file>test/Tests/ConnectionTest.php</file>
+            <file>test/Tests/QueryBuilderTest.php</file>
+            <file>test/Tests/ResultSetTest.php</file>
+            <file>test/Tests/ModelTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

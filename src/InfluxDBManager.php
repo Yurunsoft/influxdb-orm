@@ -1,7 +1,8 @@
 <?php
 namespace Yurun\InfluxDB\ORM;
 
-use InfluxDB\Client;
+use Yurun\InfluxDB\ORM\Client\Client;
+use Yurun\InfluxDB\ORM\Client\Database;
 use Yurun\InfluxDB\ORM\Client\YurunHttpDriver;
 
 abstract class InfluxDBManager
@@ -25,7 +26,7 @@ abstract class InfluxDBManager
      *
      * @var \Yurun\InfluxDB\ORM\Client\Client[]
      */
-    private static $clients;
+    private static $clients = [];
 
     /**
      * 数据库列表
@@ -49,7 +50,7 @@ abstract class InfluxDBManager
      * @param string $defaultDatabase
      * @return void
      */
-    public static function setClientConfig($clientName, $host, $port = 8086, $username = '', $password = '', $ssl = false, $verifySSL = false, $timeout = 0, $connectTimeout = 0, $defaultDatabase = null)
+    public static function setClientConfig(string $clientName, string $host, int $port = 8086, string $username = '', string $password = '', bool $ssl = false, bool $verifySSL = false, int $timeout = 0, int $connectTimeout = 0, ?string $defaultDatabase = null)
     {
         static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase');
     }
@@ -60,7 +61,7 @@ abstract class InfluxDBManager
      * @param string|null $clientName
      * @return array
      */
-    public static function getClientConfig($clientName = null)
+    public static function getClientConfig(?string $clientName = null): ?array
     {
         $clientName = static::getClientName($clientName);
         return static::$clientConfigs[$clientName] ?? null;
@@ -72,7 +73,7 @@ abstract class InfluxDBManager
      * @param string|null $clientName
      * @return void
      */
-    public static function removeClientConfig($clientName = null)
+    public static function removeClientConfig(?string $clientName = null)
     {
         $clientName = static::getClientName($clientName);
         if(isset(static::$clientConfigs[$clientName]))
@@ -95,9 +96,9 @@ abstract class InfluxDBManager
     /**
      * 获取默认客户端名
      *
-     * @return string
+     * @return string|null
      */
-    public static function getDefaultClientName(): string
+    public static function getDefaultClientName(): ?string
     {
         return static::$defaultClientName;
     }
@@ -108,7 +109,7 @@ abstract class InfluxDBManager
      * @param string|null $clientName
      * @return \Yurun\InfluxDB\ORM\Client\Client
      */
-    public static function getClient($clientName = null)
+    public static function getClient(?string $clientName = null): Client
     {
         $clientName = static::getClientName($clientName);
         if(isset(static::$clients[$clientName]))
@@ -132,7 +133,7 @@ abstract class InfluxDBManager
      * @param string|null $clientName
      * @return \InfluxDB\Database
      */
-    public static function getDatabase($databaseName = null, $clientName = null)
+    public static function getDatabase(?string $databaseName = null, ?string $clientName = null): Database
     {
         if(null === $databaseName)
         {
@@ -162,7 +163,7 @@ abstract class InfluxDBManager
      * @param string|null $clientName
      * @return string
      */
-    public static function getClientName($clientName = null)
+    public static function getClientName(?string $clientName = null): ?string
     {
         return $clientName ?: static::$defaultClientName;
     }

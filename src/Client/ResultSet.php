@@ -1,6 +1,8 @@
 <?php
 namespace Yurun\InfluxDB\ORM\Client;
 
+use Yurun\InfluxDB\ORM\BaseModel;
+
 class ResultSet extends \InfluxDB\ResultSet
 {
     /**
@@ -9,7 +11,7 @@ class ResultSet extends \InfluxDB\ResultSet
      * @param integer $rowIndex
      * @return array|null
      */
-    public function getRow($rowIndex = 0)
+    public function getRow(int $rowIndex = 0): ?array
     {
         $points = $this->getPoints();
         return $points[$rowIndex] ?? null;
@@ -23,13 +25,13 @@ class ResultSet extends \InfluxDB\ResultSet
      * @param mixed $default
      * @return mixed
      */
-    public function getScalar($columnIndex = 1, $rowIndex = 0, $default = null)
+    public function getScalar(int $columnIndex = 1, int $rowIndex = 0, $default = null)
     {
         $points = $this->getPoints();
         $row = $points[$rowIndex] ?? null;
         if(!$row)
         {
-            return $row;
+            return $default;
         }
         if(is_int($columnIndex))
         {
@@ -53,9 +55,10 @@ class ResultSet extends \InfluxDB\ResultSet
      * 获取模型
      *
      * @param string $modelClass
+     * @param int $rowIndex
      * @return \Yurun\InfluxDB\ORM\BaseModel|null
      */
-    public function getModel($modelClass, $rowIndex = 0)
+    public function getModel(string $modelClass, int $rowIndex = 0): ?BaseModel
     {
         $row = $this->getPoints()[$rowIndex] ?? null;
         if(!$row)
@@ -71,7 +74,7 @@ class ResultSet extends \InfluxDB\ResultSet
      * @param string $modelClass
      * @return \Yurun\InfluxDB\ORM\BaseModel[]
      */
-    public function getModelList($modelClass)
+    public function getModelList(string $modelClass): array
     {
         $list = [];
         foreach($this->getPoints() as $point)

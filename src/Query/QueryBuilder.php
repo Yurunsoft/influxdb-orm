@@ -2,6 +2,7 @@
 namespace Yurun\InfluxDB\ORM\Query;
 
 use Yurun\InfluxDB\ORM\InfluxDBManager;
+use Yurun\InfluxDB\ORM\Client\ResultSet;
 
 class QueryBuilder
 {
@@ -69,6 +70,13 @@ class QueryBuilder
     private $timezone;
 
     /**
+     * 构造方法赋值的时区
+     *
+     * @var string
+     */
+    private $originTimezone;
+
+    /**
      * 最后执行的SQL语句
      *
      * @var string
@@ -89,10 +97,10 @@ class QueryBuilder
      */
     private $limit;
 
-    public function __construct($clientName = null, $databaseName = null, $timezone = null)
+    public function __construct(?string $clientName = null, ?string $databaseName = null, ?string $timezone = null)
     {
         $this->database = InfluxDBManager::getDatabase($databaseName, $clientName);
-        $this->timezone = $timezone;
+        $this->originTimezone = $this->timezone = $timezone;
     }
 
     /**
@@ -101,7 +109,7 @@ class QueryBuilder
      * @param string $modelClass
      * @return static
      */
-    public static function createFromModel($modelClass)
+    public static function createFromModel(string $modelClass): self
     {
         /** @var \Yurun\InfluxDB\ORM\Meta\Meta $meta */
         $meta = $modelClass::__getMeta();
@@ -117,7 +125,7 @@ class QueryBuilder
      * @param string $field
      * @return static
      */
-    public function field($field)
+    public function field(string $field): self
     {
         $this->fields[] = $field;
         return $this;
@@ -129,7 +137,7 @@ class QueryBuilder
      * @param string $field
      * @return static
      */
-    public function from($table)
+    public function from(string $table): self
     {
         return $this->table($table);
     }
@@ -140,7 +148,7 @@ class QueryBuilder
      * @param string $field
      * @return static
      */
-    public function table($table)
+    public function table(string $table): self
     {
         $this->table = $table;
         return $this;
@@ -155,15 +163,24 @@ class QueryBuilder
      * @param string $condition
      * @return static
      */
-    public function where($field, $op = null, $value = null, $condition = 'AND')
+    public function where($field, ?string $op = null, $value = null, string $condition = 'AND'): self
     {
         if(is_array($field))
         {
+            $first = true;
             // 数组条件，无视后面的参数
             foreach($field as $k => $v)
             {
                 $where = $k . ' = ' . $this->parseValue($k, $v);
-                $this->where[] = ($this->where ? ($condition . ' ') : '') . $where;
+                if($first)
+                {
+                    $this->where[] = ($this->where ? ($condition . ' ') : '') . $where;
+                    $first = false;
+                }
+                else
+                {
+                    $this->where[] = 'AND ' . $where;
+                }
             }
         }
         else if(null === $op && null === $value && is_string($field))
@@ -187,7 +204,7 @@ class QueryBuilder
      * @param mixed $value
      * @return static
      */
-    public function orWhere($field, $op = null, $value = null)
+    public function orWhere($field, ?string $op = null, $value = null): self
     {
         return $this->where($field, $op, $value, 'OR');
     }
@@ -199,7 +216,7 @@ class QueryBuilder
      * @param string|null $order
      * @return static
      */
-    public function order($field, $order = null)
+    public function order(string $field, ?string $order = null): self
     {
         $this->orderBy[] = $field . ($order ? (' ' . $order) : '');
         return $this;
@@ -211,7 +228,7 @@ class QueryBuilder
      * @param string $group
      * @return static
      */
-    public function group($group)
+    public function group(string $group): self
     {
         $this->groupBy[] = $group;
         return $this;
@@ -224,7 +241,7 @@ class QueryBuilder
      * @param int|null $limit
      * @return static
      */
-    public function limit($offset, $limit = null)
+    public function limit(int $offset, ?int $limit = null): self
     {
         if(null === $limit)
         {
@@ -240,13 +257,25 @@ class QueryBuilder
     }
 
     /**
+     * 时区
+     *
+     * @param string|null $timezone
+     * @return static
+     */
+    public function timezone(?string $timezone): self
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    /**
      * 处理加入条件的值
      *
      * @param string $field
      * @param mixed $value
      * @return string
      */
-    private function parseValue($field, $value)
+    private function parseValue(string $field, $value): string
     {
         if($this->modelMeta && $property = $this->modelMeta->getByFieldName($field))
         {
@@ -310,7 +339,7 @@ class QueryBuilder
      *
      * @return string
      */
-    public function buildSql()
+    public function buildSql(): string
     {
         if(!$this->table && $this->modelMeta)
         {
@@ -353,6 +382,7 @@ SQL;
         $this->fields = [];
         $this->orderBy = [];
         $this->groupBy = [];
+        $this->timezone = $this->originTimezone;
         return $sql;
     }
 
@@ -361,7 +391,7 @@ SQL;
      *
      * @return \Yurun\InfluxDB\ORM\Client\ResultSet
      */
-    public function select()
+    public function select(): ResultSet
     {
         $sql = $this->lastSql = $this->buildSql();
         return $this->database->query($sql);
@@ -372,7 +402,7 @@ SQL;
      *
      * @return string
      */ 
-    public function getLastSql()
+    public function getLastSql(): string
     {
         return $this->lastSql;
     }
