@@ -160,7 +160,7 @@ abstract class BaseModel implements \JsonSerializable
      * 回调仅有一个参数，类型为 \Yurun\InfluxDB\ORM\Query\QueryBuilder
      * 
      * @param callable $callback
-     * @return static
+     * @return static|null
      */
     public static function find(callable $callback): self
     {
