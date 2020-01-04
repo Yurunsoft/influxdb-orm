@@ -162,7 +162,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param callable $callback
      * @return static|null
      */
-    public static function find(callable $callback): self
+    public static function find(callable $callback): ?self
     {
         $query = static::query();
         $callback($query);
