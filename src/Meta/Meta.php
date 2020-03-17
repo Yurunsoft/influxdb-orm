@@ -174,12 +174,12 @@ class Meta
                     {
                         case Tag::class:
                             /** @var Tag $annotation */
-                            $tagName = $annotation->name;
+                            $tagName = $annotation->name ?? $name;
                             $tagType = $annotation->type;
                             break;
                         case Field::class:
                             /** @var Field $annotation */
-                            $fieldName = $annotation->name;
+                            $fieldName = $annotation->name ?? $name;
                             $fieldType = $annotation->type;
                             break;
                         case Timestamp::class:
