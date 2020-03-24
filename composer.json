@@ -7,7 +7,7 @@
         "php": "^7.1",
         "influxdb/influxdb-php": "^1.15",
         "doctrine/annotations": "^1.8.0",
-        "yurunsoft/yurun-http": "^3.4.0"
+        "yurunsoft/yurun-http": "^4.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7"
