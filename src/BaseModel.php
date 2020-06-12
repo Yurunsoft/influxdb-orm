@@ -53,6 +53,10 @@ abstract class BaseModel implements \JsonSerializable
             {
                 $this->$propertyName = $data[$name];
             }
+            else if(isset($data[$propertyName]))
+            {
+                $this->$propertyName = $data[$propertyName];
+            }
         }
     }
 
