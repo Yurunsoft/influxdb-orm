@@ -194,7 +194,7 @@ class A extends BaseModel
 use Yurun\InfluxDB\ORM\InfluxDBManager;
 
 // 设置客户端名称为test，默认数据库为db_test
-InfluxDBManager::setClientConfig('test', '127.0.0.1', 8086, '', '', false, false, 0, 0, 'db_test');
+InfluxDBManager::setClientConfig('test', '127.0.0.1', 8086, '', '', false, false, 0, 0, 'db_test', '/');
 // 设置默认数据库为test
 InfluxDBManager::setDefaultClientName('test');
 

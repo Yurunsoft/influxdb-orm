@@ -5,6 +5,27 @@ namespace Yurun\InfluxDB\ORM\Client;
 class Client extends \InfluxDB\Client
 {
     /**
+     * @var string
+     */
+    protected $path;
+
+    public function __construct(
+        string $host,
+        int $port = 8086,
+        string $username = '',
+        string $password = '',
+        bool $ssl = false,
+        bool $verifySSL = false,
+        float $timeout = 0,
+        float $connectTimeout = 0,
+        string $path = '/',
+    ) {
+        parent::__construct($host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout);
+        $this->path = $path;
+        $this->baseURI .= $path;
+    }
+
+    /**
      * Query influxDB.
      *
      * @param string $database

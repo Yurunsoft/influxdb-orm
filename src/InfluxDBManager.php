@@ -43,9 +43,9 @@ abstract class InfluxDBManager
      *
      * @return void
      */
-    public static function setClientConfig(string $clientName, string $host, int $port = 8086, string $username = '', string $password = '', bool $ssl = false, bool $verifySSL = false, int $timeout = 0, int $connectTimeout = 0, ?string $defaultDatabase = null)
+    public static function setClientConfig(string $clientName, string $host, int $port = 8086, string $username = '', string $password = '', bool $ssl = false, bool $verifySSL = false, int $timeout = 0, int $connectTimeout = 0, ?string $defaultDatabase = null, string $path = '/')
     {
-        static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase');
+        static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path');
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class InfluxDBManager
             throw new \RuntimeException(sprintf('Client %s config does not found', $clientName));
         }
         $config = static::$clientConfigs[$clientName];
-        $client = new Client($config['host'], $config['port'], $config['username'], $config['password'], $config['ssl'], $config['verifySSL'], $config['timeout'], $config['connectTimeout']);
+        $client = new Client($config['host'], $config['port'], $config['username'], $config['password'], $config['ssl'], $config['verifySSL'], $config['timeout'], $config['connectTimeout'], $config['path']);
         $client->setDriver(new YurunHttpDriver($client->getBaseURI()));
 
         return static::$clients[$clientName] = $client;
