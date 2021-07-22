@@ -20,3 +20,4 @@ parameters:
         - '#should return static\(Yurun\\InfluxDB\\ORM\\BaseModel#'
         - '#should return array<static\(Yurun\\InfluxDB\\ORM\\BaseModel#'
         - '#Unsafe usage of new static#'
+        - '#unknown class Swoole\\#'

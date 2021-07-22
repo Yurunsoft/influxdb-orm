@@ -18,7 +18,7 @@ class Client extends \InfluxDB\Client
         bool $verifySSL = false,
         float $timeout = 0,
         float $connectTimeout = 0,
-        string $path = '/',
+        string $path = '/'
     ) {
         parent::__construct($host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout);
         $this->path = $path;
