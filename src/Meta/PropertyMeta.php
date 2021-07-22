@@ -1,52 +1,53 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Meta;
 
 class PropertyMeta
 {
     /**
-     * 字段属性名
+     * 字段属性名.
      *
      * @var string
      */
     private $name;
 
     /**
-     * 标签名
+     * 标签名.
      *
      * @var string|null
      */
     private $tagName;
 
     /**
-     * 标签类型
+     * 标签类型.
      *
      * @var string|null
      */
     private $tagType;
 
     /**
-     * 字段名
+     * 字段名.
      *
      * @var string|null
      */
     private $fieldName;
 
     /**
-     * 字段类型
+     * 字段类型.
      *
      * @var string|null
      */
     private $fieldType;
 
     /**
-     * 值类型
+     * 值类型.
      *
      * @var string|null
      */
     private $valueType;
 
     /**
-     * 是否为时间戳
+     * 是否为时间戳.
      *
      * @var bool
      */
@@ -60,7 +61,7 @@ class PropertyMeta
     private $value;
 
     /**
-     * 时间格式
+     * 时间格式.
      *
      * @var string|null
      */
@@ -80,39 +81,31 @@ class PropertyMeta
     }
 
     /**
-     * Get 字段属性名
-     *
-     * @return string
-     */ 
+     * Get 字段属性名.
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Get 标签名
-     *
-     * @return string|null
-     */ 
+     * Get 标签名.
+     */
     public function getTagName(): ?string
     {
         return $this->tagName;
     }
 
     /**
-     * Get 标签类型
-     *
-     * @return string|null
-     */ 
+     * Get 标签类型.
+     */
     public function getTagType(): ?string
     {
         return $this->tagType;
     }
 
     /**
-     * 是否为标签
-     *
-     * @return boolean
+     * 是否为标签.
      */
     public function isTag(): bool
     {
@@ -120,29 +113,23 @@ class PropertyMeta
     }
 
     /**
-     * Get 字段名
-     *
-     * @return string|null
-     */ 
+     * Get 字段名.
+     */
     public function getFieldName(): ?string
     {
         return $this->fieldName;
     }
 
     /**
-     * Get 字段类型
-     *
-     * @return string|null
-     */ 
+     * Get 字段类型.
+     */
     public function getFieldType(): ?string
     {
         return $this->fieldType;
     }
 
     /**
-     * 是否为字段
-     *
-     * @return boolean
+     * 是否为字段.
      */
     public function isField(): bool
     {
@@ -150,10 +137,8 @@ class PropertyMeta
     }
 
     /**
-     * Get 是否为时间戳
-     *
-     * @return bool
-     */ 
+     * Get 是否为时间戳.
+     */
     public function isTimestamp(): bool
     {
         return $this->timestamp;
@@ -161,32 +146,25 @@ class PropertyMeta
 
     /**
      * Get 是否为值
-     *
-     * @return bool
-     */ 
+     */
     public function isValue(): bool
     {
         return $this->value;
     }
 
     /**
-     * Get 值类型
-     *
-     * @return string|null
-     */ 
+     * Get 值类型.
+     */
     public function getValueType(): ?string
     {
         return $this->valueType;
     }
 
     /**
-     * Get 时间格式
-     *
-     * @return string|null
-     */ 
+     * Get 时间格式.
+     */
     public function getTimeFormat(): ?string
     {
         return $this->timeFormat;
     }
-
 }

@@ -1,19 +1,21 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Test\Model;
 
-use Yurun\InfluxDB\ORM\BaseModel;
-use Yurun\InfluxDB\ORM\Annotation\Tag;
 use Yurun\InfluxDB\ORM\Annotation\Field;
-use Yurun\InfluxDB\ORM\Annotation\Value;
-use Yurun\InfluxDB\ORM\Annotation\Timestamp;
 use Yurun\InfluxDB\ORM\Annotation\Measurement;
+use Yurun\InfluxDB\ORM\Annotation\Tag;
+use Yurun\InfluxDB\ORM\Annotation\Timestamp;
+use Yurun\InfluxDB\ORM\Annotation\Value;
+use Yurun\InfluxDB\ORM\BaseModel;
 
 /**
  * @Measurement(name="a")
- * @property int $id
+ *
+ * @property int    $id
  * @property string $name
- * @property int $time
- * @property int $score
+ * @property int    $time
+ * @property float  $score
  */
 class ModelA extends BaseModel
 {
@@ -45,28 +47,33 @@ class ModelA extends BaseModel
      */
     private $score;
 
-    public static function create($id, $name, $time, $score)
+    /**
+     * @param int|string $time
+     *
+     * @return static
+     */
+    public static function create(int $id, string $name, $time, float $score): self
     {
         return new static(compact('id', 'name', 'time', 'score'));
     }
 
     /**
-     * Get the value of time
+     * Get the value of time.
      *
      * @return int|string
-     */ 
+     */
     public function getTime()
     {
         return $this->time;
     }
 
     /**
-     * Set the value of time
+     * Set the value of time.
      *
      * @param int|string $time
      *
      * @return self
-     */ 
+     */
     public function setTime($time)
     {
         $this->time = $time;
@@ -75,22 +82,20 @@ class ModelA extends BaseModel
     }
 
     /**
-     * Get the value of id
+     * Get the value of id.
      *
      * @return int
-     */ 
+     */
     public function getId()
     {
         return $this->id;
     }
 
     /**
-     * Set the value of id
-     *
-     * @param int $id
+     * Set the value of id.
      *
      * @return self
-     */ 
+     */
     public function setId(int $id)
     {
         $this->id = $id;
@@ -99,22 +104,20 @@ class ModelA extends BaseModel
     }
 
     /**
-     * Get the value of name
+     * Get the value of name.
      *
      * @return string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
     }
 
     /**
-     * Set the value of name
-     *
-     * @param string $name
+     * Set the value of name.
      *
      * @return self
-     */ 
+     */
     public function setName(string $name)
     {
         $this->name = $name;
@@ -123,27 +126,24 @@ class ModelA extends BaseModel
     }
 
     /**
-     * Get the value of score
+     * Get the value of score.
      *
      * @return float
-     */ 
+     */
     public function getScore()
     {
         return $this->score;
     }
 
     /**
-     * Set the value of score
-     *
-     * @param float $score
+     * Set the value of score.
      *
      * @return self
-     */ 
+     */
     public function setScore(float $score)
     {
         $this->score = $score;
 
         return $this;
     }
-
 }

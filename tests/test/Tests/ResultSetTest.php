@@ -1,4 +1,5 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Test\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -7,7 +8,7 @@ use Yurun\InfluxDB\ORM\Query\QueryBuilder;
 
 class ResultSetTest extends TestCase
 {
-    public function testInitConnection()
+    public function testInitConnection(): void
     {
         $host = getenv('INFLUXDB_HOST') ?: '127.0.0.1';
         $port = getenv('INFLUXDB_PORT') ?: 8086;
@@ -24,7 +25,7 @@ class ResultSetTest extends TestCase
         $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase'), InfluxDBManager::getClientConfig('dbtest'));
     }
 
-    public function testGetRow()
+    public function testGetRow(): void
     {
         $query = new QueryBuilder('dbtest');
         $result = $query->timezone(date_default_timezone_get())
@@ -32,22 +33,22 @@ class ResultSetTest extends TestCase
                         ->order('time')
                         ->select();
         $this->assertEquals([
-            'id'    =>  '1',
-            'value' =>  1,
-            'name'  =>  'a',
-            'time'  =>  '2019-01-01T01:01:01Z',
-            'age'   =>  11,
+            'id'    => '1',
+            'value' => 1,
+            'name'  => 'a',
+            'time'  => '2019-01-01T01:01:01Z',
+            'age'   => 11,
         ], $result->getRow());
         $this->assertEquals([
-            'id'    =>  '2',
-            'value' =>  2,
-            'name'  =>  'b',
-            'time'  =>  '2019-02-02T02:02:02Z',
-            'age'   =>  22,
+            'id'    => '2',
+            'value' => 2,
+            'name'  => 'b',
+            'time'  => '2019-02-02T02:02:02Z',
+            'age'   => 22,
         ], $result->getRow(1));
     }
 
-    public function testGetScalar()
+    public function testGetScalar(): void
     {
         $query = new QueryBuilder('dbtest');
         $result = $query->timezone(date_default_timezone_get())
@@ -62,5 +63,4 @@ class ResultSetTest extends TestCase
                         ->select();
         $this->assertEquals(19260817, $result->getScalar(1, 0, 19260817));
     }
-
 }

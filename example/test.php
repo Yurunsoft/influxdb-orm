@@ -13,8 +13,8 @@ InfluxDBManager::setDefaultClientName('test');
 
 // 写入数据，支持对象和数组
 $r = A::write([
-    A::create(mt_rand(1, 999999), time(), time(), mt_rand(1, 100)),
-    ['id'=>1, 'name'=>'aaa', 'time'=>time(), 'value'=>mt_rand(1, 100)],
+    A::create(mt_rand(1, 999999), (string) time(), time(), mt_rand(1, 100)),
+    ['id' => 1, 'name' => 'aaa', 'time' => time(), 'value' => mt_rand(1, 100)],
 ]);
 
 var_dump($r);
@@ -40,18 +40,17 @@ var_dump($result->getPoints(), $query->getLastSql());
 $result = $query->where('id', '=', 1)->limit(1, 2)->select();
 var_dump($result->getPoints(), $query->getLastSql());
 
-
 $result = $query->where('id', '=', 1)->limit(1, 2)->select();
 var_dump($result->getModel(A::class));
 
 $result = $query->where('id', '=', 1)->limit(1, 2)->select();
 var_dump($result->getModelList(A::class));
 
-var_dump(A::find(function(QueryBuilder $query){
+var_dump(A::find(function (QueryBuilder $query) {
     $query->where('id', '=', 1)->limit(1);
 }));
 
-var_dump(A::select(function(QueryBuilder $query){
+var_dump(A::select(function (QueryBuilder $query) {
     $query->where('id', '=', 1)->limit(2);
 }));
 

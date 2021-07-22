@@ -1,4 +1,5 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Annotation;
 
 /**
@@ -8,18 +9,18 @@ namespace Yurun\InfluxDB\ORM\Annotation;
 class Tag
 {
     /**
-     * 名称
+     * 名称.
      *
      * @var string
      */
     public $name;
 
     /**
-     * 数据类型
+     * 数据类型.
      *
      * @Enum({"string", "int", "integer", "float", "double", "bool", "boolean"})
+     *
      * @var string
      */
     public $type = 'string';
-
 }

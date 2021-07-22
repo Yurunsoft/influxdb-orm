@@ -1,0 +1,22 @@
+parameters:
+    level: 6
+
+    phpVersion: 80000
+
+    paths:
+        - src
+        - tests
+        - example
+
+    bootstrapFiles:
+        - vendor/autoload.php
+
+    treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - '#should return static\(Yurun\\InfluxDB\\ORM\\BaseModel#'
+        - '#should return array<static\(Yurun\\InfluxDB\\ORM\\BaseModel#'
+        - '#Unsafe usage of new static#'

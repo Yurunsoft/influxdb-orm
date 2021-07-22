@@ -1,15 +1,16 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Client;
 
-use Yurun\Util\HttpRequest;
-use InfluxDB\Driver\Exception;
 use InfluxDB\Driver\DriverInterface;
+use InfluxDB\Driver\Exception;
 use InfluxDB\Driver\QueryDriverInterface;
+use Yurun\Util\HttpRequest;
 
 class YurunHttpDriver implements DriverInterface, QueryDriverInterface
 {
     /**
-     * Array of options
+     * Array of options.
      *
      * @var array
      */
@@ -29,13 +30,13 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
      */
     private $baseUri;
 
-    public function __construct($baseUri)
+    public function __construct(string $baseUri)
     {
         $this->baseUri = $baseUri . '/';
     }
 
     /**
-     * Called by the client write() method, will pass an array of required parameters such as db name
+     * Called by the client write() method, will pass an array of required parameters such as db name.
      *
      * will contain the following parameters:
      *
@@ -44,8 +45,6 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
      *  'url' => 'URL to the resource',
      *  'method' => 'HTTP method used'
      * ]
-     *
-     * @param array $parameters
      *
      * @return mixed
      */
@@ -63,9 +62,9 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
     }
 
     /**
-     * Send the data
+     * Send the data.
      *
-     * @param $data
+     * @param mixed $data
      *
      * @return mixed
      */
@@ -75,7 +74,7 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
     }
 
     /**
-     * Should return if sending the data was successful
+     * Should return if sending the data was successful.
      *
      * @return bool
      */
@@ -83,14 +82,14 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
     {
         $statuscode = $this->response->getStatusCode();
 
-        if(!in_array($statuscode, [200, 204], true))
+        if (!\in_array($statuscode, [200, 204], true))
         {
             throw new Exception('HTTP Code ' . $statuscode . ' ' . $this->response->getBody());
         }
 
         return true;
     }
-    
+
     /**
      * @return ResultSet
      */
@@ -110,22 +109,22 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
      */
     protected function getHttpRequest()
     {
-        $request = new HttpRequest;
-        if($auth = ($this->parameters['auth'] ?? null))
+        $request = new HttpRequest();
+        if ($auth = ($this->parameters['auth'] ?? null))
         {
             $request->userPwd(...$auth);
         }
+
         return $request;
     }
 
     /**
-     * @param $raw
      * @return ResultSet
+     *
      * @throws \InfluxDB\Client\Exception
      */
-    protected function asResultSet($raw)
+    protected function asResultSet(string $raw)
     {
         return new ResultSet($raw);
     }
-
 }

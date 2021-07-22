@@ -1,4 +1,5 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Test\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +7,7 @@ use Yurun\InfluxDB\ORM\Query\QueryBuilder;
 
 class QueryBuilderTest extends TestCase
 {
-    public function testSql()
+    public function testSql(): void
     {
         $query = new QueryBuilder();
         $sql = $query->from('table1')
@@ -17,8 +18,8 @@ class QueryBuilderTest extends TestCase
                     ->orWhere('a', '=', 1)
                     ->where('b', '=', 2)
                     ->orWhere([
-                        'c'   =>  3,
-                        'd'   =>  4,
+                        'c'   => 3,
+                        'd'   => 4,
                     ])
                     ->timezone('Asia/Shanghai')
                     ->limit(10, 100)
@@ -36,8 +37,8 @@ SQL
                     ->orWhere('a', '=', 1)
                     ->where('b', '=', 2)
                     ->orWhere([
-                        'c'   =>  3,
-                        'd'   =>  4,
+                        'c'   => 3,
+                        'd'   => 4,
                     ])
                     ->limit(10)
                     ->buildSql();

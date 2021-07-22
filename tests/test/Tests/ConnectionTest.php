@@ -1,4 +1,5 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Test\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +7,7 @@ use Yurun\InfluxDB\ORM\InfluxDBManager;
 
 class ConnectionTest extends TestCase
 {
-    public function testClientConfig()
+    public function testClientConfig(): void
     {
         $this->assertNull(InfluxDBManager::getClientConfig());
 
@@ -26,7 +27,7 @@ class ConnectionTest extends TestCase
         $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase'), InfluxDBManager::getClientConfig('test'));
     }
 
-    public function testRemoveClientConfig()
+    public function testRemoveClientConfig(): void
     {
         InfluxDBManager::setClientConfig('testx', '127.0.0.1');
         $this->assertNotNull(InfluxDBManager::getClientConfig('testx'));
@@ -34,20 +35,20 @@ class ConnectionTest extends TestCase
         $this->assertNull(InfluxDBManager::getClientConfig('testx'));
     }
 
-    public function testDefaultClientName()
+    public function testDefaultClientName(): void
     {
         $this->assertNull(InfluxDBManager::getDefaultClientName());
         InfluxDBManager::setDefaultClientName('test');
         $this->assertEquals('test', InfluxDBManager::getDefaultClientName());
     }
 
-    public function testGetClient()
+    public function testGetClient(): void
     {
         $client = InfluxDBManager::getClient();
         $this->assertNotNull($client);
     }
 
-    public function testGetDatabase()
+    public function testGetDatabase(): void
     {
         $database = InfluxDBManager::getDatabase();
         $this->assertEquals(getenv('INFLUXDB_TEST_ORM_DB') ?: 'db_influxdb_orm_ormtest', $database->getName());
@@ -57,5 +58,4 @@ class ConnectionTest extends TestCase
         $this->assertEquals('db2', $database->getName());
         $this->assertTrue($database->exists());
     }
-
 }

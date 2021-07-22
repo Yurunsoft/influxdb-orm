@@ -1,4 +1,5 @@
 <?php
+
 namespace Yurun\InfluxDB\ORM\Annotation;
 
 /**
@@ -8,21 +9,21 @@ namespace Yurun\InfluxDB\ORM\Annotation;
 class Measurement
 {
     /**
-     * 名称
+     * 名称.
      *
      * @var string
      */
     public $name;
 
     /**
-     * 客户端名
+     * 客户端名.
      *
      * @var string
      */
     public $client;
 
     /**
-     * 数据库名
+     * 数据库名.
      *
      * @var string
      */
@@ -40,10 +41,9 @@ class Measurement
 
     /**
      * 时区，用于查询时自动转换为当前时区的时间
-     * 为空则使用 PHP 当前时区
+     * 为空则使用 PHP 当前时区.
      *
      * @var string
      */
     public $timezone;
-
 }
