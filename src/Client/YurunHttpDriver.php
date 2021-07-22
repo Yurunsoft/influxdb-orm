@@ -32,7 +32,14 @@ class YurunHttpDriver implements DriverInterface, QueryDriverInterface
 
     public function __construct(string $baseUri)
     {
-        $this->baseUri = $baseUri . '/';
+        if ('/' === substr($baseUri, -1, 1))
+        {
+            $this->baseUri = $baseUri;
+        }
+        else
+        {
+            $this->baseUri = $baseUri . '/';
+        }
     }
 
     /**
