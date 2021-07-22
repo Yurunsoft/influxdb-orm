@@ -1,0 +1,23 @@
+version: "3.4"
+services:
+    influxdb:
+        image: influxdb:1.9
+        container_name: influxdb
+        environment:
+            - "INFLUXDB_DATA_INDEX_VERSION=tsi1"
+        ports:
+            - "8083:8083"
+            - "8086:8086"
+
+    php:
+        container_name: "php"
+        image: php:${PHP_DOCKER_VERSION}-cli
+        environment:
+            - "INFLUXDB_HOST=influxdb"
+        volumes:
+            - "${GITHUB_WORKSPACE}:/app:rw"
+        working_dir: /app
+        ulimits:
+            core: -1
+        privileged: true
+        command: tail -f /etc/group
