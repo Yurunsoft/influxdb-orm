@@ -11,7 +11,11 @@ services:
 
     php:
         container_name: "php"
-        image: php:${PHP_DOCKER_VERSION}-cli
+        build:
+            context: .
+            dockerfile: ./php.dockerfile
+            args:
+                PHP_DOCKER_VERSION: ${PHP_DOCKER_VERSION}
         environment:
             - "INFLUXDB_HOST=influxdb"
         volumes:
