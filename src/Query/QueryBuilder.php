@@ -98,6 +98,13 @@ class QueryBuilder
      */
     private $limit;
 
+    /**
+     * 跟在 SQL 语句最后的代码
+     *
+     * @var string
+     */
+    private $last = '';
+
     public function __construct(?string $clientName = null, ?string $databaseName = null, ?string $timezone = null)
     {
         $this->database = InfluxDBManager::getDatabase($databaseName, $clientName);
@@ -268,6 +275,18 @@ class QueryBuilder
     }
 
     /**
+     * 跟在 SQL 语句最后的代码.
+     *
+     * @return static
+     */
+    public function last(string $last): self
+    {
+        $this->last = $last;
+
+        return $this;
+    }
+
+    /**
      * 处理加入条件的值
      *
      * @param mixed $value
@@ -368,8 +387,13 @@ class QueryBuilder
         {
             $limit = ' limit ' . $this->limit . ' offset ' . $this->offset;
         }
+        $last = $this->last;
+        if('' !== $last)
+        {
+            $last = ' '.$last;
+        }
         $sql = <<<SQL
-select {$fields} from {$table}{$where}{$group}{$order}{$limit}{$tz}
+select {$fields} from {$table}{$where}{$group}{$order}{$limit}{$last}{$tz}
 SQL;
         $this->table = $this->offset = $this->limit = null;
         $this->where = [];
@@ -377,6 +401,7 @@ SQL;
         $this->orderBy = [];
         $this->groupBy = [];
         $this->timezone = $this->originTimezone;
+        $this->last = '';
 
         return $sql;
     }

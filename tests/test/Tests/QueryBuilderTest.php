@@ -23,9 +23,10 @@ class QueryBuilderTest extends TestCase
                     ])
                     ->timezone('Asia/Shanghai')
                     ->limit(10, 100)
+                    ->last('fill(0)')
                     ->buildSql();
         $this->assertEquals(<<<SQL
-select a,b,c from table1 where a = 1 AND b = 2 OR c = 3 AND d = 4 group by g1 order by a,b desc limit 100 offset 10 tz('Asia/Shanghai')
+select a,b,c from table1 where a = 1 AND b = 2 OR c = 3 AND d = 4 group by g1 order by a,b desc limit 100 offset 10 fill(0) tz('Asia/Shanghai')
 SQL
         , $sql);
 
@@ -41,9 +42,10 @@ SQL
                         'd'   => 4,
                     ])
                     ->limit(10)
+                    ->last('fill(0)')
                     ->buildSql();
         $this->assertEquals(<<<SQL
-select a,b,c from table1 where a = 1 AND b = 2 OR c = 3 AND d = 4 group by g1 order by a,b desc limit 10
+select a,b,c from table1 where a = 1 AND b = 2 OR c = 3 AND d = 4 group by g1 order by a,b desc limit 10 fill(0)
 SQL
         , $sql);
     }
