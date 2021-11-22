@@ -388,9 +388,9 @@ class QueryBuilder
             $limit = ' limit ' . $this->limit . ' offset ' . $this->offset;
         }
         $last = $this->last;
-        if('' !== $last)
+        if ('' !== $last)
         {
-            $last = ' '.$last;
+            $last = ' ' . $last;
         }
         $sql = <<<SQL
 select {$fields} from {$table}{$where}{$group}{$order}{$limit}{$last}{$tz}
