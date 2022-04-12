@@ -297,6 +297,7 @@ abstract class BaseModel implements \JsonSerializable
         return $result;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();
