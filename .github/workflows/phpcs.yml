@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        swoole: [4.8-php8.1]
+        swoole: [4.8-php8.0]
 
     env:
       SWOOLE_DOCKER_VERSION: ${{ matrix.swoole }}
