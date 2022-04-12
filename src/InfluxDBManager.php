@@ -2,6 +2,7 @@
 
 namespace Yurun\InfluxDB\ORM;
 
+use Swoole\Coroutine;
 use Yurun\InfluxDB\ORM\Client\Client;
 use Yurun\InfluxDB\ORM\Client\Database;
 use Yurun\InfluxDB\ORM\Client\YurunHttpDriver;
@@ -98,10 +99,21 @@ abstract class InfluxDBManager
     public static function getClient(?string $clientName = null): Client
     {
         $clientName = static::getClientName($clientName);
-        if (isset(static::$clients[$clientName]))
+        $inCo = \defined('SWOOLE_VERSION') && Coroutine::getCid() > -1;
+        if ($inCo)
+        {
+            $context = Coroutine::getContext();
+            $key = 'yurunsoft/influxdb-orm.influxdb.client.' . $clientName;
+            if (isset($context[$key]))
+            {
+                return $context[$key];
+            }
+        }
+        elseif (isset(static::$clients[$clientName]))
         {
             return static::$clients[$clientName];
         }
+
         if (!isset(static::$clientConfigs[$clientName]))
         {
             throw new \RuntimeException(sprintf('Client %s config does not found', $clientName));
@@ -109,6 +121,11 @@ abstract class InfluxDBManager
         $config = static::$clientConfigs[$clientName];
         $client = new Client($config['host'], $config['port'], $config['username'], $config['password'], $config['ssl'], $config['verifySSL'], $config['timeout'], $config['connectTimeout'], $config['path']);
         $client->setDriver(new YurunHttpDriver($client->getBaseURI()));
+
+        if ($inCo)
+        {
+            return $context[$key] = $client;
+        }
 
         return static::$clients[$clientName] = $client;
     }

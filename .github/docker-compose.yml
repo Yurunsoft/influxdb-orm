@@ -15,7 +15,7 @@ services:
             context: .
             dockerfile: ./php.dockerfile
             args:
-                PHP_DOCKER_VERSION: ${PHP_DOCKER_VERSION}
+                SWOOLE_DOCKER_VERSION: ${SWOOLE_DOCKER_VERSION}
         environment:
             - "INFLUXDB_HOST=influxdb"
         volumes:

@@ -19,7 +19,7 @@
 ```json
 {
     "require": {
-        "yurunsoft/influxdb-orm": "^1.1.0"
+        "yurunsoft/influxdb-orm": "~1.2.0"
     }
 }
 ```
@@ -30,11 +30,7 @@
 
 ### Swoole 支持
 
-在 `WorkerStart` 事件中执行：
-
-```php
-\Yurun\Util\YurunHttp::setDefaultHandler(\Yurun\Util\YurunHttp\Handler\Swoole::class);
-```
+无需做任何事情即可完美兼容 Swoole 环境！
 
 ### 定义模型
 

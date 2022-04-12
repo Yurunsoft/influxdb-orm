@@ -9,17 +9,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php:
+        swoole:
           [
-            8.0,
-            7.4,
-            7.3,
-            7.2,
-            7.1
+            4.8-php8.1,
+            4.8-php8.0,
+            4.8-php7.4,
+            4.8-php7.3,
+            4.8-php7.2,
+            4.5-php7.1,
           ]
 
     env:
-      PHP_DOCKER_VERSION: ${{ matrix.php }}
+      SWOOLE_DOCKER_VERSION: ${{ matrix.swoole }}
 
     steps:
       - uses: actions/checkout@v2
