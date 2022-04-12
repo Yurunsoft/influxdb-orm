@@ -1,8 +1,6 @@
-ARG PHP_DOCKER_VERSION
-FROM php:${PHP_DOCKER_VERSION}-cli
+ARG SWOOLE_DOCKER_VERSION
+FROM phpswoole/swoole:${SWOOLE_DOCKER_VERSION}
 
 RUN apt update
 
 RUN apt install unzip
-
-RUN curl -o /usr/bin/composer https://getcomposer.org/composer.phar && chmod +x /usr/bin/composer

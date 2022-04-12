@@ -3,6 +3,8 @@
 namespace Yurun\InfluxDB\ORM\Test\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Swoole\Coroutine;
+use function Swoole\Coroutine\run;
 use Yurun\InfluxDB\ORM\InfluxDBManager;
 
 class ConnectionTest extends TestCase
@@ -45,8 +47,34 @@ class ConnectionTest extends TestCase
 
     public function testGetClient(): void
     {
-        $client = InfluxDBManager::getClient();
-        $this->assertNotNull($client);
+        $client1 = InfluxDBManager::getClient();
+        $this->assertIsObject($client1);
+        $client2 = InfluxDBManager::getClient();
+        $this->assertIsObject($client2);
+        $this->assertEquals(spl_object_hash($client1), spl_object_hash($client2));
+
+        if (\defined('SWOOLE_VERSION'))
+        {
+            run(function () {
+                $client1 = InfluxDBManager::getClient();
+                $this->assertIsObject($client1);
+                $client2 = InfluxDBManager::getClient();
+                $this->assertIsObject($client2);
+                $this->assertEquals(spl_object_hash($client1), spl_object_hash($client2));
+            });
+            $client1 = $client2 = null;
+            run(function () use (&$client1, &$client2) {
+                Coroutine::create(function () use (&$client1) {
+                    $client1 = InfluxDBManager::getClient();
+                });
+                Coroutine::create(function () use (&$client2) {
+                    $client2 = InfluxDBManager::getClient();
+                });
+            });
+            $this->assertIsObject($client1);
+            $this->assertIsObject($client2);
+            $this->assertNotEquals(spl_object_hash($client1), spl_object_hash($client2));
+        }
     }
 
     public function testGetDatabase(): void

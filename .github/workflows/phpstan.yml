@@ -12,7 +12,7 @@ jobs:
         php: [8.0]
 
     env:
-      PHP_DOCKER_VERSION: ${{ matrix.php }}
+      SWOOLE_DOCKER_VERSION: ${{ matrix.swoole }}
 
     steps:
       - uses: actions/checkout@v2
