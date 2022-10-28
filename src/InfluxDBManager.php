@@ -44,9 +44,9 @@ abstract class InfluxDBManager
      *
      * @return void
      */
-    public static function setClientConfig(string $clientName, string $host, int $port = 8086, string $username = '', string $password = '', bool $ssl = false, bool $verifySSL = false, int $timeout = 0, int $connectTimeout = 0, ?string $defaultDatabase = null, string $path = '/')
+    public static function setClientConfig(string $clientName, string $host, int $port = 8086, string $username = '', string $password = '', bool $ssl = false, bool $verifySSL = false, int $timeout = 0, int $connectTimeout = 0, ?string $defaultDatabase = null, string $path = '/', bool $createDatabase = true)
     {
-        static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path');
+        static::$clientConfigs[$clientName] = compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path', 'createDatabase');
     }
 
     /**
@@ -150,7 +150,7 @@ abstract class InfluxDBManager
         }
         $client = static::getClient($clientName);
         static::$databases[$clientName][$databaseName] = $database = $client->selectDB($databaseName);
-        if (!$database->exists())
+        if ((static::$clientConfigs[$clientName]['createDatabase'] ?? true) && !$database->exists())
         {
             $database->create();
         }
