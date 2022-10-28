@@ -23,11 +23,12 @@ class ConnectionTest extends TestCase
         $connectTimeout = 0;
         $defaultDatabase = getenv('INFLUXDB_TEST_ORM_DB') ?: 'db_influxdb_orm_ormtest';
         $path = '/';
+        $createDatabase = true;
 
-        InfluxDBManager::setClientConfig('test', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase);
-        InfluxDBManager::setClientConfig('test2', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase);
+        InfluxDBManager::setClientConfig('test', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase, $path, $createDatabase);
+        InfluxDBManager::setClientConfig('test2', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase, $path, $createDatabase);
 
-        $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path'), InfluxDBManager::getClientConfig('test'));
+        $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path', 'createDatabase'), InfluxDBManager::getClientConfig('test'));
     }
 
     public function testRemoveClientConfig(): void

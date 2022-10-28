@@ -20,10 +20,11 @@ class ResultSetTest extends TestCase
         $connectTimeout = 0;
         $defaultDatabase = getenv('INFLUXDB_TEST_DB') ?: 'db_influxdb_orm_dbtest';
         $path = '/';
+        $createDatabase = true;
 
-        InfluxDBManager::setClientConfig('dbtest', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase);
+        InfluxDBManager::setClientConfig('dbtest', $host, $port, $username, $password, $ssl, $verifySSL, $timeout, $connectTimeout, $defaultDatabase, $path, $createDatabase);
 
-        $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path'), InfluxDBManager::getClientConfig('dbtest'));
+        $this->assertEquals(compact('host', 'port', 'username', 'password', 'ssl', 'verifySSL', 'timeout', 'connectTimeout', 'defaultDatabase', 'path', 'createDatabase'), InfluxDBManager::getClientConfig('dbtest'));
     }
 
     public function testGetRow(): void
